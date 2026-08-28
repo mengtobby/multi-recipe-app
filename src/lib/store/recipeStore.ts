@@ -65,7 +65,23 @@ export const useRecipeStore = create<RecipeStoreState>()(
       },
 
       removeRecipe: (recipeId) => {
-        set((state) => ({ recipes: state.recipes.filter((r) => r.id !== recipeId) }));
+        set((state) => {
+          const removedStepIds = new Set(
+            state.recipes.find((r) => r.id === recipeId)?.steps.map((s) => s.id) ?? []
+          );
+          return {
+            recipes: state.recipes
+              .filter((r) => r.id !== recipeId)
+              .map((r) => ({
+                ...r,
+                steps: r.steps.map((s) =>
+                  s.dependsOn.some((d) => removedStepIds.has(d))
+                    ? { ...s, dependsOn: s.dependsOn.filter((d) => !removedStepIds.has(d)) }
+                    : s
+                ),
+              })),
+          };
+        });
       },
 
       renameRecipe: (recipeId, name) => {
@@ -101,16 +117,14 @@ export const useRecipeStore = create<RecipeStoreState>()(
 
       removeStep: (recipeId, stepId) => {
         set((state) => ({
-          recipes: state.recipes.map((r) =>
-            r.id === recipeId
-              ? {
-                  ...r,
-                  steps: r.steps
-                    .filter((s) => s.id !== stepId)
-                    .map((s) => ({ ...s, dependsOn: s.dependsOn.filter((d) => d !== stepId) })),
-                }
-              : r
-          ),
+          recipes: state.recipes.map((r) => ({
+            ...r,
+            steps: (r.id === recipeId ? r.steps.filter((s) => s.id !== stepId) : r.steps).map((s) =>
+              s.dependsOn.includes(stepId)
+                ? { ...s, dependsOn: s.dependsOn.filter((d) => d !== stepId) }
+                : s
+            ),
+          })),
         }));
       },
 
