@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { nanoid } from "nanoid";
 import type { Cook, EquipmentUsage, KitchenResource, Recipe, RecipeStep, StepKind } from "@/types/recipe";
 import { DEFAULT_COOKS, DEFAULT_KITCHEN_RESOURCES, RECIPE_COLORS } from "./defaults";
+import { stripCookAssignment, stripDependencyReferences } from "./mutations";
 
 export interface NewStepInput {
   description: string;
@@ -69,18 +70,8 @@ export const useRecipeStore = create<RecipeStoreState>()(
           const removedStepIds = new Set(
             state.recipes.find((r) => r.id === recipeId)?.steps.map((s) => s.id) ?? []
           );
-          return {
-            recipes: state.recipes
-              .filter((r) => r.id !== recipeId)
-              .map((r) => ({
-                ...r,
-                steps: r.steps.map((s) =>
-                  s.dependsOn.some((d) => removedStepIds.has(d))
-                    ? { ...s, dependsOn: s.dependsOn.filter((d) => !removedStepIds.has(d)) }
-                    : s
-                ),
-              })),
-          };
+          const remaining = state.recipes.filter((r) => r.id !== recipeId);
+          return { recipes: stripDependencyReferences(remaining, removedStepIds) };
         });
       },
 
@@ -116,16 +107,12 @@ export const useRecipeStore = create<RecipeStoreState>()(
       },
 
       removeStep: (recipeId, stepId) => {
-        set((state) => ({
-          recipes: state.recipes.map((r) => ({
-            ...r,
-            steps: (r.id === recipeId ? r.steps.filter((s) => s.id !== stepId) : r.steps).map((s) =>
-              s.dependsOn.includes(stepId)
-                ? { ...s, dependsOn: s.dependsOn.filter((d) => d !== stepId) }
-                : s
-            ),
-          })),
-        }));
+        set((state) => {
+          const withStepRemoved = state.recipes.map((r) =>
+            r.id === recipeId ? { ...r, steps: r.steps.filter((s) => s.id !== stepId) } : r
+          );
+          return { recipes: stripDependencyReferences(withStepRemoved, new Set([stepId])) };
+        });
       },
 
       addCook: (name) => {
@@ -135,7 +122,10 @@ export const useRecipeStore = create<RecipeStoreState>()(
       },
 
       removeCook: (cookId) => {
-        set((state) => ({ cooks: state.cooks.filter((c) => c.id !== cookId) }));
+        set((state) => ({
+          cooks: state.cooks.filter((c) => c.id !== cookId),
+          recipes: stripCookAssignment(state.recipes, cookId),
+        }));
       },
 
       setKitchenCapacity: (resourceId, capacity) => {

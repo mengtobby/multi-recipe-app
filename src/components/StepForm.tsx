@@ -65,7 +65,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
   };
 
   const submit = () => {
-    if (!input.description.trim() || input.durationMinutes <= 0) return;
+    if (!input.description.trim() || !Number.isFinite(input.durationMinutes) || input.durationMinutes <= 0) return;
     if (editingStep) {
       updateStep(recipeId, editingStep.id, input);
     } else {

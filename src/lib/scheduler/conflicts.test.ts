@@ -36,7 +36,7 @@ describe("resolveEquipmentConflicts", () => {
     expect(timings.c2.scheduledStart).toBe(80);
     expect(timings.br1.scheduledStart).toBe(90);
 
-    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "oven", capacity: 1 }]);
+    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "oven", capacity: 1 }], order);
 
     expect(resolved.conflicts).toHaveLength(0);
     // chicken (less oven slack) keeps its default late placement
@@ -61,7 +61,7 @@ describe("resolveEquipmentConflicts", () => {
     const order = topologicalSort(graph);
     const { timings } = computeTimings(graph, order, 50);
 
-    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "oven", capacity: 1 }]);
+    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "oven", capacity: 1 }], order);
 
     expect(resolved.conflicts).toHaveLength(1);
     expect(resolved.conflicts[0].resolved).toBe(false);
@@ -80,10 +80,39 @@ describe("resolveEquipmentConflicts", () => {
     const order = topologicalSort(graph);
     const { timings } = computeTimings(graph, order, 10);
 
-    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "burner", capacity: 4 }]);
+    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "burner", capacity: 4 }], order);
 
     expect(resolved.conflicts).toHaveLength(0);
     expect(resolved.timings.v1.scheduledStart).toBe(0);
     expect(resolved.timings.v2.scheduledStart).toBe(0);
+  });
+
+  it("never schedules a step to start before its own dependency has finished", () => {
+    // A1 -> A2 (oven) competes with B1 (oven, less slack via a separate long
+    // chain). A2 has enough slack that a naive earliest-start floor (computed
+    // from durations alone, ignoring A1's actual late default finish) would
+    // let it get shifted earlier than A1 really finishes.
+    const recipes = [
+      recipe("a", [
+        { id: "a1", recipeId: "a", description: "prep", durationMinutes: 10, kind: "active", dependsOn: [], equipment: [] },
+        { id: "a2", recipeId: "a", description: "bake a", durationMinutes: 20, kind: "passive", dependsOn: ["a1"], equipment: [{ resourceId: "oven" }] },
+      ]),
+      recipe("b", [
+        { id: "m1", recipeId: "b", description: "long unrelated prep", durationMinutes: 150, kind: "active", dependsOn: [], equipment: [] },
+        { id: "b1", recipeId: "b", description: "bake b", durationMinutes: 20, kind: "passive", dependsOn: ["m1"], equipment: [{ resourceId: "oven" }] },
+      ]),
+      recipe("c", [
+        { id: "l1", recipeId: "c", description: "critical-path filler", durationMinutes: 200, kind: "active", dependsOn: [], equipment: [] },
+      ]),
+    ];
+    // l1 (200min) + serveBuffer (2min) is the critical path, so a target of
+    // 202 leaves zero slack to spare — the scenario that reproduces the bug.
+    const graph = buildGraph(recipes, 2);
+    const order = topologicalSort(graph);
+    const { timings } = computeTimings(graph, order, 202);
+
+    const resolved = resolveEquipmentConflicts(graph, timings, [{ resourceId: "oven", capacity: 1 }], order);
+
+    expect(resolved.timings.a2.scheduledStart).toBeGreaterThanOrEqual(resolved.timings.a1.scheduledFinish);
   });
 });

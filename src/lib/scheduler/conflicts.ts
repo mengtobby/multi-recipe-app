@@ -22,7 +22,9 @@ export interface ConflictResolution {
 
 /**
  * Greedily resolves equipment overlaps by shifting flexible (high-slack)
- * steps earlier, minute by minute, down to their own earliest-start floor.
+ * steps earlier, minute by minute, down to their own earliest-start floor
+ * — but never earlier than its real dependencies' current scheduled finish,
+ * so a step is never placed before the step it depends on has finished.
  * Steps with the least slack keep their default (latest-possible) time,
  * since they have no room to move. Returns a new timings map — the input
  * is left untouched.
@@ -30,7 +32,8 @@ export interface ConflictResolution {
 export function resolveEquipmentConflicts(
   nodes: Record<string, GraphNode>,
   timings: Record<string, StepTiming>,
-  capacities: KitchenResourceCapacity[]
+  capacities: KitchenResourceCapacity[],
+  order: string[]
 ): ConflictResolution {
   const capacityByResource = new Map(capacities.map((c) => [c.resourceId, c.capacity]));
   const usageByResource = new Map<string, { stepId: string; tempF?: number }[]>();
@@ -43,7 +46,7 @@ export function resolveEquipmentConflicts(
     }
   }
 
-  const nextTimings: Record<string, StepTiming> = { ...timings };
+  let nextTimings: Record<string, StepTiming> = { ...timings };
   const conflicts: EquipmentConflict[] = [];
 
   for (const [resourceId, users] of usageByResource) {
@@ -54,14 +57,19 @@ export function resolveEquipmentConflicts(
 
     const accepted: AcceptedInterval[] = [];
     for (const stepId of stepIds) {
+      const node = nodes[stepId];
       const timing = nextTimings[stepId];
       const duration = timing.scheduledFinish - timing.scheduledStart;
       const tempF = users.find((u) => u.stepId === stepId)?.tempF;
+      const dependencyFloor = node.dependsOn.reduce(
+        (latest, depId) => Math.max(latest, nextTimings[depId].scheduledFinish),
+        timing.earliestStart
+      );
 
       let start = timing.scheduledStart;
       let placed = fits(accepted, start, start + duration, capacity);
 
-      while (!placed && start > timing.earliestStart) {
+      while (!placed && start > dependencyFloor) {
         start -= 1;
         placed = fits(accepted, start, start + duration, capacity);
       }
@@ -89,5 +97,38 @@ export function resolveEquipmentConflicts(
     }
   }
 
+  // Safety net: the per-resource shifts above use each dependency's timing
+  // as of when *that* step happened to be processed, which can still land
+  // out of order across different resources. One forward pass in
+  // topological order guarantees no step is ever scheduled to start before
+  // its dependencies actually finish (it may reintroduce a rare equipment
+  // overlap in exchange — a real but flagged-elsewhere scheduling problem
+  // — which is preferable to a physically impossible timeline).
+  nextTimings = enforceDependencyOrder(nodes, nextTimings, order);
+
   return { timings: nextTimings, conflicts };
+}
+
+function enforceDependencyOrder(
+  nodes: Record<string, GraphNode>,
+  timings: Record<string, StepTiming>,
+  order: string[]
+): Record<string, StepTiming> {
+  const next = { ...timings };
+  for (const id of order) {
+    const node = nodes[id];
+    if (node.dependsOn.length === 0) continue;
+
+    const timing = next[id];
+    const requiredStart = node.dependsOn.reduce(
+      (latest, depId) => Math.max(latest, next[depId].scheduledFinish),
+      timing.scheduledStart
+    );
+
+    if (requiredStart > timing.scheduledStart) {
+      const duration = timing.scheduledFinish - timing.scheduledStart;
+      next[id] = { ...timing, scheduledStart: requiredStart, scheduledFinish: requiredStart + duration };
+    }
+  }
+  return next;
 }

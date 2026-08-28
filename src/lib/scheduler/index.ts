@@ -31,7 +31,7 @@ export function buildSchedule(
   const nodes = buildGraph(recipes, serveBufferMinutes);
   const order = topologicalSort(nodes);
   const { timings, minimumDurationMinutes } = computeTimings(nodes, order, targetEpochMinutes);
-  const { timings: resolvedTimings, conflicts } = resolveEquipmentConflicts(nodes, timings, kitchenCapacities);
+  const { timings: resolvedTimings, conflicts } = resolveEquipmentConflicts(nodes, timings, kitchenCapacities, order);
 
   const isFeasible =
     nowEpochMinutes == null ? true : targetEpochMinutes - nowEpochMinutes >= minimumDurationMinutes;
@@ -41,6 +41,7 @@ export function buildSchedule(
     timings: resolvedTimings,
     order,
     conflicts,
+    kitchenCapacities,
     targetEpochMinutes,
     minimumDurationMinutes,
     isFeasible,
@@ -51,7 +52,18 @@ export function timelineFor(schedule: ScheduleResult): TimelineEntry[] {
   return buildTimeline(schedule.nodes, schedule.timings, schedule.order);
 }
 
+/**
+ * Applies a "running late" delay and re-resolves equipment conflicts
+ * against the new (post-delay) times, since the cascade can introduce an
+ * overlap that didn't exist before.
+ */
 export function delayStep(schedule: ScheduleResult, stepId: string, extraMinutes: number): ScheduleResult & { delay: DelayResult } {
   const delay = applyDelay(schedule.nodes, schedule.timings, schedule.order, stepId, extraMinutes);
-  return { ...schedule, timings: delay.timings, delay };
+  const { timings: resolvedTimings, conflicts } = resolveEquipmentConflicts(
+    schedule.nodes,
+    delay.timings,
+    schedule.kitchenCapacities,
+    schedule.order
+  );
+  return { ...schedule, timings: resolvedTimings, conflicts, delay };
 }

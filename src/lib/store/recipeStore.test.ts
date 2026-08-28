@@ -64,4 +64,25 @@ describe("recipeStore", () => {
     const asparagusStep = useRecipeStore.getState().recipes.find((r) => r.id === asparagusId)!.steps[0];
     expect(asparagusStep.dependsOn).toEqual([]);
   });
+
+  it("clears assignedCook on every step when that cook is removed", () => {
+    const { addRecipe, addCook } = useRecipeStore.getState();
+    const chickenId = addRecipe("Chicken");
+    const cookBId = addCook("Cook B");
+
+    const stepId = useRecipeStore.getState().addStep(chickenId, {
+      description: "season",
+      durationMinutes: 5,
+      kind: "active",
+      dependsOn: [],
+      equipment: [],
+      assignedCook: cookBId,
+    });
+
+    useRecipeStore.getState().removeCook(cookBId);
+
+    const step = useRecipeStore.getState().recipes.find((r) => r.id === chickenId)!.steps.find((s) => s.id === stepId)!;
+    expect(step.assignedCook).toBeUndefined();
+    expect(useRecipeStore.getState().cooks.find((c) => c.id === cookBId)).toBeUndefined();
+  });
 });

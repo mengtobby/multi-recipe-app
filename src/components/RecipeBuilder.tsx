@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatDuration } from "@/lib/format";
 import { StepForm } from "./StepForm";
@@ -21,6 +21,16 @@ export function RecipeBuilder() {
     addRecipe(newRecipeName.trim());
     setNewRecipeName("");
   };
+
+  const recipeById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+  const allDependencies = useMemo(
+    () =>
+      recipes.flatMap((r) => r.steps).map((s) => ({
+        id: s.id,
+        label: `${recipeById.get(s.recipeId)?.name}: ${s.description}`,
+      })),
+    [recipes, recipeById]
+  );
 
   return (
     <section className="rounded-lg border border-black/10 bg-white/60 p-4 dark:border-white/10 dark:bg-white/5">
@@ -48,13 +58,6 @@ export function RecipeBuilder() {
 
       <div className="space-y-4">
         {recipes.map((recipe) => {
-          const otherDependencies = recipes
-            .flatMap((r) => r.steps)
-            .map((s) => ({
-              id: s.id,
-              label: `${recipes.find((r) => r.id === s.recipeId)?.name}: ${s.description}`,
-            }));
-
           return (
             <div key={recipe.id} className="rounded-md border border-black/10 p-3 dark:border-white/10">
               <div className="mb-2 flex items-center justify-between">
@@ -79,7 +82,7 @@ export function RecipeBuilder() {
                         <StepForm
                           recipeId={recipe.id}
                           editingStep={step}
-                          availableDependencies={otherDependencies.filter((d) => d.id !== step.id)}
+                          availableDependencies={allDependencies.filter((d) => d.id !== step.id)}
                           onDone={() => setEditingStep(null)}
                         />
                       </div>
@@ -117,7 +120,7 @@ export function RecipeBuilder() {
               {addingStepFor === recipe.id ? (
                 <StepForm
                   recipeId={recipe.id}
-                  availableDependencies={otherDependencies}
+                  availableDependencies={allDependencies}
                   onDone={() => setAddingStepFor(null)}
                 />
               ) : (

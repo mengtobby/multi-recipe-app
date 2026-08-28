@@ -44,6 +44,8 @@ export interface ScheduleResult {
   /** Topological order, synthetic serve node last. */
   order: string[];
   conflicts: EquipmentConflict[];
+  /** Carried along so a later re-resolution (e.g. after a delay) can reuse it. */
+  kitchenCapacities: KitchenResourceCapacity[];
   targetEpochMinutes: number;
   /** Minimum minutes needed on the critical path, regardless of target. */
   minimumDurationMinutes: number;

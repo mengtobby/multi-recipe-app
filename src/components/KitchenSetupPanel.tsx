@@ -37,7 +37,10 @@ export function KitchenSetupPanel() {
                 type="number"
                 min={1}
                 value={resource.capacity}
-                onChange={(e) => setKitchenCapacity(resource.id, Math.max(1, Number(e.target.value)))}
+                onChange={(e) => {
+                  const parsed = Number(e.target.value);
+                  if (Number.isFinite(parsed)) setKitchenCapacity(resource.id, Math.max(1, parsed));
+                }}
                 className="w-16 rounded-md border border-black/15 bg-white px-2 py-1 text-right dark:border-white/20 dark:bg-black/30"
               />
             </div>
