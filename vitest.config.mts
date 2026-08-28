@@ -5,13 +5,15 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
+    // Component tests opt into jsdom per-file via `// @vitest-environment jsdom`;
+    // plain logic tests (the majority) stay on the much faster node environment.
+    environment: "node",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
 });
