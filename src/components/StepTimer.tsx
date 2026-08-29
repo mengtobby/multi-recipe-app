@@ -1,14 +1,11 @@
-import { useNowEpochMinutes } from "@/lib/store/useNow";
-
 interface StepTimerProps {
   start: number;
   finish: number;
+  now: number;
 }
 
 /** Live countdown/elapsed indicator for a step that's in progress or upcoming. */
-export function StepTimer({ start, finish }: StepTimerProps) {
-  const now = useNowEpochMinutes();
-
+export function StepTimer({ start, finish, now }: StepTimerProps) {
   if (now < start) {
     return <span className="text-xs text-black/40 dark:text-white/40">starts in {start - now} min</span>;
   }

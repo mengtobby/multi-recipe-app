@@ -6,6 +6,7 @@ import { SERVE_NODE_ID } from "@/lib/scheduler";
 import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatClockTime } from "@/lib/format";
 import { toMapById } from "@/lib/collections";
+import { useNowEpochMinutes } from "@/lib/store/useNow";
 import { CookFilterTabs } from "./CookFilterTabs";
 import { StepTimer } from "./StepTimer";
 import { ConflictBanner } from "./ConflictBanner";
@@ -20,6 +21,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
   const cooks = useRecipeStore((s) => s.cooks);
   const addDelay = useRecipeStore((s) => s.addDelay);
   const [selectedCookId, setSelectedCookId] = useState<string | null>(null);
+  const now = useNowEpochMinutes();
 
   const stepLookup = useMemo(() => {
     const map = new Map<string, { assignedCook?: string }>();
@@ -97,7 +99,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                 )}
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
-                <StepTimer start={entry.start} finish={entry.finish} />
+                <StepTimer start={entry.start} finish={entry.finish} now={now} />
                 {!isServe && (
                   <button
                     type="button"
