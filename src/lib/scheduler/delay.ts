@@ -1,4 +1,5 @@
 import { SERVE_NODE_ID, type GraphNode, type StepTiming } from "./types";
+import { enforceDependencyOrder } from "./ordering";
 
 export interface DelayResult {
   timings: Record<string, StepTiming>;
@@ -10,10 +11,10 @@ export interface DelayResult {
 
 /**
  * "I'm running late" mode: a step is taking `extraMinutes` longer than
- * planned. Pushes its finish out and cascades the delay forward to any
- * dependent step (in any recipe) whose scheduled start would now precede
- * its prerequisite's new finish time. Returns a new timings map — the
- * input is left untouched.
+ * planned. Pushes its finish out, then reuses the same dependency-ordering
+ * pass conflict resolution relies on to cascade that delay forward to any
+ * dependent step (in any recipe). Returns a new timings map — the input is
+ * left untouched.
  */
 export function applyDelay(
   nodes: Record<string, GraphNode>,
@@ -22,35 +23,17 @@ export function applyDelay(
   stepId: string,
   extraMinutes: number
 ): DelayResult {
-  const next: Record<string, StepTiming> = { ...timings };
-  const affected = new Set<string>([stepId]);
+  const delayed = timings[stepId];
+  const withDelay: Record<string, StepTiming> = {
+    ...timings,
+    [stepId]: { ...delayed, scheduledFinish: delayed.scheduledFinish + extraMinutes },
+  };
 
-  const delayed = next[stepId];
-  next[stepId] = { ...delayed, scheduledFinish: delayed.scheduledFinish + extraMinutes };
-
-  const startIndex = order.indexOf(stepId);
-  for (let i = startIndex + 1; i < order.length; i += 1) {
-    const id = order[i];
-    const node = nodes[id];
-    const timing = next[id];
-    const requiredStart = node.dependsOn.reduce(
-      (latest, depId) => Math.max(latest, next[depId].scheduledFinish),
-      timing.scheduledStart
-    );
-
-    if (requiredStart > timing.scheduledStart) {
-      const pushed = requiredStart - timing.scheduledStart;
-      next[id] = {
-        ...timing,
-        scheduledStart: requiredStart,
-        scheduledFinish: timing.scheduledFinish + pushed,
-      };
-      affected.add(id);
-    }
-  }
+  const next = enforceDependencyOrder(nodes, withDelay, order);
+  const affectedStepIds = order.filter((id) => next[id] !== timings[id]);
 
   const serve = next[SERVE_NODE_ID];
   const targetOverrunMinutes = Math.max(0, serve.scheduledFinish - serve.latestFinish);
 
-  return { timings: next, affectedStepIds: [...affected], targetOverrunMinutes };
+  return { timings: next, affectedStepIds, targetOverrunMinutes };
 }

@@ -1,4 +1,5 @@
 import type { EquipmentConflict, GraphNode, KitchenResourceCapacity, StepTiming } from "./types";
+import { enforceDependencyOrder } from "./ordering";
 
 interface AcceptedInterval {
   stepId: string;
@@ -51,6 +52,7 @@ export function resolveEquipmentConflicts(
 
   for (const [resourceId, users] of usageByResource) {
     const capacity = capacityByResource.get(resourceId) ?? 1;
+    const tempByStep = new Map(users.map((u) => [u.stepId, u.tempF]));
     const stepIds = users
       .map((u) => u.stepId)
       .sort((a, b) => nextTimings[a].slackMinutes - nextTimings[b].slackMinutes);
@@ -60,7 +62,7 @@ export function resolveEquipmentConflicts(
       const node = nodes[stepId];
       const timing = nextTimings[stepId];
       const duration = timing.scheduledFinish - timing.scheduledStart;
-      const tempF = users.find((u) => u.stepId === stepId)?.tempF;
+      const tempF = tempByStep.get(stepId);
       const dependencyFloor = node.dependsOn.reduce(
         (latest, depId) => Math.max(latest, nextTimings[depId].scheduledFinish),
         timing.earliestStart
@@ -107,28 +109,4 @@ export function resolveEquipmentConflicts(
   nextTimings = enforceDependencyOrder(nodes, nextTimings, order);
 
   return { timings: nextTimings, conflicts };
-}
-
-function enforceDependencyOrder(
-  nodes: Record<string, GraphNode>,
-  timings: Record<string, StepTiming>,
-  order: string[]
-): Record<string, StepTiming> {
-  const next = { ...timings };
-  for (const id of order) {
-    const node = nodes[id];
-    if (node.dependsOn.length === 0) continue;
-
-    const timing = next[id];
-    const requiredStart = node.dependsOn.reduce(
-      (latest, depId) => Math.max(latest, next[depId].scheduledFinish),
-      timing.scheduledStart
-    );
-
-    if (requiredStart > timing.scheduledStart) {
-      const duration = timing.scheduledFinish - timing.scheduledStart;
-      next[id] = { ...timing, scheduledStart: requiredStart, scheduledFinish: requiredStart + duration };
-    }
-  }
-  return next;
 }
