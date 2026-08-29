@@ -6,20 +6,19 @@ interface CookFilterTabsProps {
   onSelect: (cookId: string | null) => void;
 }
 
+function tabClassName(active: boolean): string {
+  const state = active
+    ? "bg-blue-600 text-white"
+    : "bg-black/5 text-black/60 hover:bg-black/10 dark:bg-white/10 dark:text-white/60";
+  return `rounded-full px-3 py-1 text-xs font-medium ${state}`;
+}
+
 export function CookFilterTabs({ cooks, selectedCookId, onSelect }: CookFilterTabsProps) {
   if (cooks.length <= 1) return null;
 
   return (
     <div className="flex flex-wrap gap-2">
-      <button
-        type="button"
-        onClick={() => onSelect(null)}
-        className={`rounded-full px-3 py-1 text-xs font-medium ${
-          selectedCookId === null
-            ? "bg-blue-600 text-white"
-            : "bg-black/5 text-black/60 hover:bg-black/10 dark:bg-white/10 dark:text-white/60"
-        }`}
-      >
+      <button type="button" onClick={() => onSelect(null)} className={tabClassName(selectedCookId === null)}>
         Everyone
       </button>
       {cooks.map((cook) => (
@@ -27,11 +26,7 @@ export function CookFilterTabs({ cooks, selectedCookId, onSelect }: CookFilterTa
           key={cook.id}
           type="button"
           onClick={() => onSelect(cook.id)}
-          className={`rounded-full px-3 py-1 text-xs font-medium ${
-            selectedCookId === cook.id
-              ? "bg-blue-600 text-white"
-              : "bg-black/5 text-black/60 hover:bg-black/10 dark:bg-white/10 dark:text-white/60"
-          }`}
+          className={tabClassName(selectedCookId === cook.id)}
         >
           {cook.name}
         </button>
