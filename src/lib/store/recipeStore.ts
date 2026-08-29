@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { nanoid } from "nanoid";
-import type { Cook, EquipmentUsage, KitchenResource, Recipe, RecipeStep, StepKind } from "@/types/recipe";
+import type { Cook, EquipmentUsage, KitchenResource, Recipe, StepKind } from "@/types/recipe";
 import { DEFAULT_COOKS, DEFAULT_KITCHEN_RESOURCES, RECIPE_COLORS } from "./defaults";
 import { stripCookAssignment, stripDependencyReferences } from "./mutations";
 
@@ -156,5 +156,3 @@ export const useRecipeStore = create<RecipeStoreState>()(
     { name: "multi-recipe-app-store" }
   )
 );
-
-export type { RecipeStep };

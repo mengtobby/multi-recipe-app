@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { buildSchedule, delayStep, timelineFor, type ScheduleResult, type TimelineEntry } from "@/lib/scheduler";
+import { toEpochMinutes } from "@/lib/format";
 import { useRecipeStore } from "./recipeStore";
 import { useNowEpochMinutes } from "./useNow";
 
@@ -7,17 +8,6 @@ export interface DerivedSchedule {
   schedule: ScheduleResult | null;
   timeline: TimelineEntry[];
   error: string | null;
-}
-
-/** Converts a `<input type="datetime-local">` value to minutes since epoch. */
-export function toEpochMinutes(dateTimeLocal: string): number | null {
-  if (!dateTimeLocal) return null;
-  const ms = new Date(dateTimeLocal).getTime();
-  return Number.isNaN(ms) ? null : Math.round(ms / 60000);
-}
-
-export function fromEpochMinutes(epochMinutes: number): Date {
-  return new Date(epochMinutes * 60000);
 }
 
 export function useSchedule(): DerivedSchedule {
