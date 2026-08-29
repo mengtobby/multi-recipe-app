@@ -60,7 +60,6 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
         {visibleEntries.map((entry) => {
           const isServe = entry.stepIds.includes(SERVE_NODE_ID);
           const primaryRecipe = isServe ? null : recipeById.get(entry.recipeIds[0] ?? "");
-          const node = schedule.nodes[entry.stepIds[0]];
 
           return (
             <li
@@ -87,13 +86,11 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                     </span>
                   )}
                   <span className="text-sm">{entry.description}</span>
-                  <span className="text-xs text-black/40 dark:text-white/40">
-                    {node?.kind === "passive" ? "passive" : "active"}
-                  </span>
+                  <span className="text-xs text-black/40 dark:text-white/40">{entry.kind}</span>
                 </div>
-                {node?.equipment && node.equipment.length > 0 && (
+                {entry.equipment.length > 0 && (
                   <div className="mt-0.5 text-xs text-black/40 dark:text-white/40">
-                    {node.equipment
+                    {entry.equipment
                       .map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId))
                       .join(", ")}
                   </div>

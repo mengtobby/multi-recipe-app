@@ -1,3 +1,4 @@
+import type { EquipmentUsage, StepKind } from "@/types/recipe";
 import type { GraphNode, StepTiming } from "./types";
 
 export interface TimelineEntry {
@@ -7,6 +8,10 @@ export interface TimelineEntry {
   description: string;
   start: number;
   finish: number;
+  /** "passive" only if every merged step is passive; "active" if any of them needs hands-on attention. */
+  kind: StepKind;
+  /** Deduped by resourceId across every merged step. */
+  equipment: EquipmentUsage[];
 }
 
 /**
@@ -34,13 +39,23 @@ export function buildTimeline(
     }
   }
 
-  const toEntry = (ids: string[]): TimelineEntry => ({
-    stepIds: ids,
-    recipeIds: ids.map((id) => nodes[id].recipeId),
-    description: ids.map((id) => nodes[id].description).join("; "),
-    start: timings[ids[0]].scheduledStart,
-    finish: Math.max(...ids.map((id) => timings[id].scheduledFinish)),
-  });
+  const toEntry = (ids: string[]): TimelineEntry => {
+    const equipmentByResource = new Map<string, EquipmentUsage>();
+    for (const id of ids) {
+      for (const usage of nodes[id].equipment) {
+        if (!equipmentByResource.has(usage.resourceId)) equipmentByResource.set(usage.resourceId, usage);
+      }
+    }
+    return {
+      stepIds: ids,
+      recipeIds: ids.map((id) => nodes[id].recipeId),
+      description: ids.map((id) => nodes[id].description).join("; "),
+      start: timings[ids[0]].scheduledStart,
+      finish: Math.max(...ids.map((id) => timings[id].scheduledFinish)),
+      kind: ids.every((id) => nodes[id].kind === "passive") ? "passive" : "active",
+      equipment: [...equipmentByResource.values()],
+    };
+  };
 
   const entries: TimelineEntry[] = singles.map((id) => toEntry([id]));
   for (const groupedIds of batchGroups.values()) {
