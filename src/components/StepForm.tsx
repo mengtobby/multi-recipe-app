@@ -153,7 +153,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
                   />
                   {resource.name}
                 </label>
-                {usage && resource.id === "oven" && (
+                {usage && resource.supportsTemperature && (
                   <input
                     type="number"
                     placeholder="°F"

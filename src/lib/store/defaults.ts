@@ -1,7 +1,7 @@
 import type { Cook, KitchenResource } from "@/types/recipe";
 
 export const DEFAULT_KITCHEN_RESOURCES: KitchenResource[] = [
-  { id: "oven", name: "Oven", capacity: 1 },
+  { id: "oven", name: "Oven", capacity: 1, supportsTemperature: true },
   { id: "burner", name: "Stovetop burner", capacity: 4 },
   { id: "prep-space", name: "Prep / cutting board", capacity: 2 },
 ];

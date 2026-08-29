@@ -34,6 +34,8 @@ export interface KitchenResource {
   id: string;
   name: string;
   capacity: number;
+  /** Whether steps using this resource can specify a temperature (e.g. an oven, not a cutting board). */
+  supportsTemperature?: boolean;
 }
 
 export interface Cook {
