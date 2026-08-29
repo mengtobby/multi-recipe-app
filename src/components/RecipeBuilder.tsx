@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatDuration } from "@/lib/format";
+import { toMapById } from "@/lib/collections";
 import { StepForm } from "./StepForm";
 
 export function RecipeBuilder() {
@@ -22,7 +23,8 @@ export function RecipeBuilder() {
     setNewRecipeName("");
   };
 
-  const recipeById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+  const recipeById = useMemo(() => toMapById(recipes), [recipes]);
+  const cookById = useMemo(() => toMapById(cooks), [cooks]);
   const allDependencies = useMemo(
     () =>
       recipes.flatMap((r) => r.steps).map((s) => ({
@@ -92,7 +94,7 @@ export function RecipeBuilder() {
                           {step.description}{" "}
                           <span className="text-black/40 dark:text-white/40">
                             ({formatDuration(step.durationMinutes)}, {step.kind}
-                            {step.assignedCook ? `, ${cooks.find((c) => c.id === step.assignedCook)?.name}` : ""})
+                            {step.assignedCook ? `, ${cookById.get(step.assignedCook)?.name}` : ""})
                           </span>
                         </span>
                         <span className="flex shrink-0 gap-2 text-xs">

@@ -5,6 +5,7 @@ import type { ScheduleResult, TimelineEntry } from "@/lib/scheduler";
 import { SERVE_NODE_ID } from "@/lib/scheduler";
 import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatClockTime } from "@/lib/format";
+import { toMapById } from "@/lib/collections";
 import { CookFilterTabs } from "./CookFilterTabs";
 import { StepTimer } from "./StepTimer";
 import { ConflictBanner } from "./ConflictBanner";
@@ -28,7 +29,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
     return map;
   }, [recipes]);
 
-  const recipeById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes]);
+  const recipeById = useMemo(() => toMapById(recipes), [recipes]);
 
   const visibleEntries = selectedCookId
     ? timeline.filter((entry) =>
