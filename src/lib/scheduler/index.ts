@@ -67,3 +67,25 @@ export function delayStep(schedule: ScheduleResult, stepId: string, extraMinutes
   );
   return { ...schedule, timings: resolvedTimings, conflicts, delay };
 }
+
+/**
+ * Applies every pending delay in one pass and resolves equipment conflicts
+ * once at the end, instead of re-running full conflict resolution after
+ * each individual delay (what calling delayStep in a loop would do).
+ */
+export function applyDelays(schedule: ScheduleResult, delays: Record<string, number>): ScheduleResult {
+  let timings = schedule.timings;
+  for (const [stepId, extraMinutes] of Object.entries(delays)) {
+    if (extraMinutes > 0 && timings[stepId]) {
+      timings = applyDelay(schedule.nodes, timings, schedule.order, stepId, extraMinutes).timings;
+    }
+  }
+
+  const { timings: resolvedTimings, conflicts } = resolveEquipmentConflicts(
+    schedule.nodes,
+    timings,
+    schedule.kitchenCapacities,
+    schedule.order
+  );
+  return { ...schedule, timings: resolvedTimings, conflicts };
+}
