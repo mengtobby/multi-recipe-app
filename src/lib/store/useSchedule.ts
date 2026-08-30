@@ -23,7 +23,7 @@ function useBaseSchedule(): DerivedSchedule {
 
   return useMemo(() => {
     const targetEpochMinutes = toEpochMinutes(targetDateTime);
-    if (targetEpochMinutes == null || recipes.every((r) => r.steps.length === 0)) {
+    if (targetEpochMinutes == null || recipes.length === 0) {
       return { schedule: null, timeline: [], error: null };
     }
 

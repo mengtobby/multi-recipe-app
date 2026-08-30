@@ -32,7 +32,7 @@ export default function Home() {
           {!error && schedule && <TimelineView schedule={schedule} timeline={timeline} />}
           {!error && !schedule && (
             <div className="rounded-lg border border-dashed border-black/15 p-8 text-center text-sm text-black/50 dark:border-white/15 dark:text-white/50">
-              Set a target serving time and add at least one dish with a step to see the synced timeline.
+              Set a target serving time and add at least one dish to see the synced timeline.
             </div>
           )}
         </div>

@@ -25,6 +25,15 @@ describe("buildGraph", () => {
     expect(graph.c1.dependsOn).toEqual([]);
   });
 
+  it("produces just the serve node for a dish with no steps yet", () => {
+    const recipes = [recipe("chicken", [])];
+
+    const graph = buildGraph(recipes);
+
+    expect(Object.keys(graph)).toEqual([SERVE_NODE_ID]);
+    expect(graph[SERVE_NODE_ID].dependsOn).toEqual([]);
+  });
+
   it("throws UnknownDependencyError for a dangling dependency", () => {
     const recipes = [
       recipe("chicken", [
