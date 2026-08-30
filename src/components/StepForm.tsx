@@ -75,7 +75,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
   };
 
   return (
-    <div className="space-y-3 rounded-md border border-black/10 bg-black/[0.02] p-3 text-sm dark:border-white/10 dark:bg-white/5">
+    <div className="space-y-3 rounded-sm border border-[var(--board-edge)] bg-[var(--paper)] p-3 text-sm text-[var(--ink)] shadow-[2px_3px_0_var(--board-edge)]">
       <label className="block">
         <span className="mb-1 block font-medium">Step description</span>
         <input
@@ -83,7 +83,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           value={input.description}
           onChange={(e) => setInput((p) => ({ ...p, description: e.target.value }))}
           placeholder='e.g. "Season chicken & place in oven"'
-          className="w-full rounded-md border border-black/15 bg-white px-3 py-2 dark:border-white/20 dark:bg-black/30"
+          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
         />
       </label>
 
@@ -95,7 +95,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
             min={1}
             value={input.durationMinutes}
             onChange={(e) => setInput((p) => ({ ...p, durationMinutes: Number(e.target.value) }))}
-            className="w-full rounded-md border border-black/15 bg-white px-3 py-2 dark:border-white/20 dark:bg-black/30"
+            className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 font-mono tabular-nums"
           />
         </label>
         <label className="flex-1">
@@ -103,7 +103,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           <select
             value={input.kind}
             onChange={(e) => setInput((p) => ({ ...p, kind: e.target.value as StepKind }))}
-            className="w-full rounded-md border border-black/15 bg-white px-3 py-2 dark:border-white/20 dark:bg-black/30"
+            className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2"
           >
             <option value="active">Active (hands-on)</option>
             <option value="passive">Passive (unattended)</option>
@@ -116,7 +116,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         <select
           value={input.assignedCook ?? ""}
           onChange={(e) => setInput((p) => ({ ...p, assignedCook: e.target.value || undefined }))}
-          className="w-full rounded-md border border-black/15 bg-white px-3 py-2 dark:border-white/20 dark:bg-black/30"
+          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2"
         >
           <option value="">Unassigned</option>
           {cooks.map((cook) => (
@@ -134,7 +134,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           value={input.batchKey ?? ""}
           onChange={(e) => setInput((p) => ({ ...p, batchKey: e.target.value || undefined }))}
           placeholder='e.g. "chop-garlic" — combines with same-key steps at the same time'
-          className="w-full rounded-md border border-black/15 bg-white px-3 py-2 dark:border-white/20 dark:bg-black/30"
+          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
         />
       </label>
 
@@ -150,6 +150,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
                     type="checkbox"
                     checked={!!usage}
                     onChange={(e) => toggleEquipment(resource.id, e.target.checked)}
+                    className="accent-[var(--frame)]"
                   />
                   {resource.name}
                 </label>
@@ -159,7 +160,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
                     placeholder="°F"
                     value={usage.tempF ?? ""}
                     onChange={(e) => setEquipmentTemp(resource.id, e.target.value ? Number(e.target.value) : undefined)}
-                    className="w-20 rounded-md border border-black/15 bg-white px-2 py-1 text-right dark:border-white/20 dark:bg-black/30"
+                    className="w-20 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-2 py-1 text-right font-mono tabular-nums"
                   />
                 )}
               </div>
@@ -178,6 +179,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
                   type="checkbox"
                   checked={input.dependsOn.includes(dep.id)}
                   onChange={(e) => toggleDependency(dep.id, e.target.checked)}
+                  className="accent-[var(--frame)]"
                 />
                 {dep.label}
               </label>
@@ -190,11 +192,11 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         <button
           type="button"
           onClick={submit}
-          className="rounded-md bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700"
+          className="rounded-sm bg-[var(--frame)] px-3 py-1.5 font-medium text-[var(--board)] hover:bg-[var(--frame-dark)]"
         >
           {editingStep ? "Save step" : "Add step"}
         </button>
-        <button type="button" onClick={onDone} className="px-3 py-1.5 text-black/60 dark:text-white/60">
+        <button type="button" onClick={onDone} className="px-3 py-1.5 text-[var(--ink-muted)] hover:text-[var(--ink)]">
           Cancel
         </button>
       </div>

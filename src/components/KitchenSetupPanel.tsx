@@ -11,56 +11,75 @@ export function KitchenSetupPanel() {
   const addCook = useRecipeStore((s) => s.addCook);
   const removeCook = useRecipeStore((s) => s.removeCook);
 
-  return (
-    <section className="rounded-lg border border-black/10 bg-white/60 p-4 dark:border-white/10 dark:bg-white/5">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/60 dark:text-white/60">
-        Kitchen setup
-      </h2>
+  const bumpCapacity = (resourceId: string, current: number, delta: number) => {
+    setKitchenCapacity(resourceId, Math.max(1, current + delta));
+  };
 
-      <label className="mb-4 block text-sm">
-        <span className="mb-1 block font-medium">Target serving time</span>
+  return (
+    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[3px_4px_0_var(--board-edge)]">
+      <PushPin />
+      <h2 className="font-marker mb-4 text-lg text-[var(--ink)]">Kitchen setup</h2>
+
+      <label className="mb-5 block">
+        <span className="mb-1 flex items-center gap-1.5 text-sm font-medium text-[var(--ink)]">
+          <ClockIcon /> Target serving time
+        </span>
         <input
           type="datetime-local"
           value={targetDateTime}
           onChange={(e) => setTargetDateTime(e.target.value)}
-          className="w-full rounded-md border border-black/15 bg-white px-3 py-2 text-sm dark:border-white/20 dark:bg-black/30"
+          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 font-mono text-sm tabular-nums text-[var(--ink)]"
         />
       </label>
 
-      <div className="mb-4">
-        <span className="mb-1 block text-sm font-medium">Equipment capacity</span>
+      <div className="mb-5">
+        <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Equipment capacity</span>
         <div className="space-y-2">
           {kitchenResources.map((resource) => (
-            <div key={resource.id} className="flex items-center justify-between gap-3 text-sm">
-              <span>{resource.name}</span>
-              <input
-                type="number"
-                min={1}
-                value={resource.capacity}
-                onChange={(e) => {
-                  const parsed = Number(e.target.value);
-                  if (Number.isFinite(parsed)) setKitchenCapacity(resource.id, Math.max(1, parsed));
-                }}
-                className="w-16 rounded-md border border-black/15 bg-white px-2 py-1 text-right dark:border-white/20 dark:bg-black/30"
-              />
+            <div
+              key={resource.id}
+              className="flex items-center justify-between gap-3 rounded-sm bg-[var(--board)]/60 px-2 py-1.5"
+            >
+              <span className="text-sm text-[var(--ink)]">{resource.name}</span>
+              <div className="flex items-center gap-1.5">
+                <StepperButton
+                  label={`Decrease ${resource.name} capacity`}
+                  onClick={() => bumpCapacity(resource.id, resource.capacity, -1)}
+                >
+                  −
+                </StepperButton>
+                <span className="w-6 text-center font-mono text-sm tabular-nums text-[var(--ink)]">
+                  {resource.capacity}
+                </span>
+                <StepperButton
+                  label={`Increase ${resource.name} capacity`}
+                  onClick={() => bumpCapacity(resource.id, resource.capacity, 1)}
+                >
+                  +
+                </StepperButton>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       <div>
-        <span className="mb-1 block text-sm font-medium">Cooks</span>
-        <ul className="mb-2 space-y-1 text-sm">
+        <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Cooks on the line</span>
+        <ul className="mb-2 flex flex-wrap gap-2">
           {cooks.map((cook) => (
-            <li key={cook.id} className="flex items-center justify-between gap-2">
-              <span>{cook.name}</span>
+            <li
+              key={cook.id}
+              className="flex items-center gap-1.5 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-2 py-1 text-sm text-[var(--ink)]"
+            >
+              {cook.name}
               {cooks.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeCook(cook.id)}
-                  className="text-xs text-black/50 hover:text-red-600 dark:text-white/50"
+                  aria-label={`Remove ${cook.name}`}
+                  className="text-[var(--ink-faint)] hover:text-[var(--red)]"
                 >
-                  remove
+                  ×
                 </button>
               )}
             </li>
@@ -69,11 +88,54 @@ export function KitchenSetupPanel() {
         <button
           type="button"
           onClick={() => addCook(`Cook ${cooks.length + 1}`)}
-          className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+          className="text-sm font-medium text-[var(--ink-muted)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
         >
-          + add cook
+          + pin a cook
         </button>
       </div>
     </section>
+  );
+}
+
+function StepperButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="flex h-6 w-6 items-center justify-center rounded-sm border border-[var(--frame-light)] bg-[var(--paper)] text-sm leading-none text-[var(--ink)] shadow-[1px_1px_0_var(--board-edge)] hover:bg-[var(--board)] active:translate-y-px active:shadow-none"
+    >
+      {children}
+    </button>
+  );
+}
+
+function PushPin() {
+  return (
+    <span
+      aria-hidden
+      className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"
+      style={{
+        background: "radial-gradient(circle at 35% 30%, #f2645c, #b23a34 70%)",
+        boxShadow: "0 2px 3px rgba(0,0,0,0.35)",
+      }}
+    />
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+      <circle cx="10" cy="10" r="7.5" />
+      <path d="M10 6v4l3 2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

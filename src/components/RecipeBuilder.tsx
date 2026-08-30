@@ -35,10 +35,16 @@ export function RecipeBuilder() {
   );
 
   return (
-    <section className="rounded-lg border border-black/10 bg-white/60 p-4 dark:border-white/10 dark:bg-white/5">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-black/60 dark:text-white/60">
-        Menu
-      </h2>
+    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[3px_4px_0_var(--board-edge)]">
+      <span
+        aria-hidden
+        className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"
+        style={{
+          background: "radial-gradient(circle at 35% 30%, #ffd873, #d98324 70%)",
+          boxShadow: "0 2px 3px rgba(0,0,0,0.35)",
+        }}
+      />
+      <h2 className="font-marker mb-4 text-lg text-[var(--ink)]">Menu</h2>
 
       <div className="mb-4 flex gap-2">
         <input
@@ -47,38 +53,45 @@ export function RecipeBuilder() {
           onChange={(e) => setNewRecipeName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && createRecipe()}
           placeholder="Add a dish, e.g. Roast Chicken"
-          className="flex-1 rounded-md border border-black/15 bg-white px-3 py-2 text-sm dark:border-white/20 dark:bg-black/30"
+          className="flex-1 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-faint)]"
         />
         <button
           type="button"
           onClick={createRecipe}
-          className="rounded-md bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700"
+          className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--board)] hover:bg-[var(--frame-dark)]"
         >
-          Add dish
+          Pin dish
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {recipes.map((recipe) => {
           return (
-            <div key={recipe.id} className="rounded-md border border-black/10 p-3 dark:border-white/10">
+            <div key={recipe.id} className="rounded-sm border border-[var(--board-edge)] bg-[var(--board)]/50 p-3">
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: recipe.color }} />
-                  <h3 className="font-medium">{recipe.name}</h3>
+                  <span
+                    className="h-3.5 w-3.5 shrink-0 rounded-full border border-black/10 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
+                    style={{ backgroundColor: recipe.color }}
+                    aria-hidden
+                  />
+                  <h3 className="font-medium text-[var(--ink)]">{recipe.name}</h3>
                 </div>
                 <button
                   type="button"
                   onClick={() => removeRecipe(recipe.id)}
-                  className="text-xs text-black/50 hover:text-red-600 dark:text-white/50"
+                  className="text-xs text-[var(--ink-faint)] hover:text-[var(--red)]"
                 >
-                  remove dish
+                  unpin dish
                 </button>
               </div>
 
               <ul className="mb-2 space-y-1 text-sm">
                 {recipe.steps.map((step) => (
-                  <li key={step.id} className="flex items-center justify-between gap-2 rounded px-2 py-1 hover:bg-black/[0.03] dark:hover:bg-white/5">
+                  <li
+                    key={step.id}
+                    className="flex items-center justify-between gap-2 rounded-sm px-2 py-1 hover:bg-[var(--paper)]"
+                  >
                     {editingStep?.stepId === step.id ? (
                       <div className="w-full">
                         <StepForm
@@ -90,9 +103,9 @@ export function RecipeBuilder() {
                       </div>
                     ) : (
                       <>
-                        <span>
+                        <span className="text-[var(--ink)]">
                           {step.description}{" "}
-                          <span className="text-black/40 dark:text-white/40">
+                          <span className="font-mono text-xs tabular-nums text-[var(--ink-faint)]">
                             ({formatDuration(step.durationMinutes)}, {step.kind}
                             {step.assignedCook ? `, ${cookById.get(step.assignedCook)?.name}` : ""})
                           </span>
@@ -101,14 +114,14 @@ export function RecipeBuilder() {
                           <button
                             type="button"
                             onClick={() => setEditingStep({ recipeId: recipe.id, stepId: step.id })}
-                            className="text-blue-600 hover:underline dark:text-blue-400"
+                            className="text-[var(--ink-muted)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
                           >
                             edit
                           </button>
                           <button
                             type="button"
                             onClick={() => removeStep(recipe.id, step.id)}
-                            className="text-black/50 hover:text-red-600 dark:text-white/50"
+                            className="text-[var(--ink-faint)] hover:text-[var(--red)]"
                           >
                             remove
                           </button>
@@ -129,7 +142,7 @@ export function RecipeBuilder() {
                 <button
                   type="button"
                   onClick={() => setAddingStepFor(recipe.id)}
-                  className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+                  className="text-xs font-medium text-[var(--ink-muted)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
                 >
                   + add step
                 </button>
@@ -139,7 +152,7 @@ export function RecipeBuilder() {
         })}
 
         {recipes.length === 0 && (
-          <p className="text-sm text-black/50 dark:text-white/50">
+          <p className="rounded-sm border border-dashed border-[var(--ink-faint)] p-4 text-center text-sm text-[var(--ink-muted)]">
             Add a dish above to start building your menu.
           </p>
         )}
