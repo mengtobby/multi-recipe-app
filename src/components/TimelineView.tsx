@@ -7,6 +7,7 @@ import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatClockTime } from "@/lib/format";
 import { toMapById } from "@/lib/collections";
 import { useNowEpochMinutes } from "@/lib/store/useNow";
+import { readableTextColor } from "@/lib/color";
 import { CookFilterTabs } from "./CookFilterTabs";
 import { StepTimer } from "./StepTimer";
 import { ConflictBanner } from "./ConflictBanner";
@@ -106,64 +107,66 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
               </div>
 
               <div
-                className={`flex flex-1 flex-wrap items-start gap-3 rounded-sm border p-2.5 sm:flex-nowrap ${
+                className={`flex-1 rounded-sm border p-2.5 ${
                   isServe
                     ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--board)]"
                     : "border-[var(--board-edge)] bg-[var(--board)]"
                 }`}
               >
-                <div
-                  className={`w-16 shrink-0 pt-0.5 font-mono text-sm font-medium tabular-nums ${
-                    isServe ? "text-[var(--board)]" : "text-[var(--ink)]"
-                  }`}
-                >
-                  {formatClockTime(entry.start)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-baseline gap-3">
+                  <span
+                    className={`w-14 shrink-0 font-mono text-sm font-medium tabular-nums ${
+                      isServe ? "text-[var(--board)]" : "text-[var(--ink)]"
+                    }`}
+                  >
+                    {formatClockTime(entry.start)}
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                     {!isServe && (
                       <span
-                        className="rounded-sm px-1.5 py-0.5 text-xs font-medium text-white"
-                        style={{ backgroundColor: primaryRecipe?.color ?? "#8b9096" }}
+                        className="shrink-0 rounded-sm px-1.5 py-0.5 text-xs font-medium"
+                        style={{
+                          backgroundColor: primaryRecipe?.color ?? "#8b9096",
+                          color: readableTextColor(primaryRecipe?.color ?? "#8b9096"),
+                        }}
                       >
                         {primaryRecipe?.name ?? "?"}
                       </span>
                     )}
                     {isServe && (
-                      <span className="font-marker inline-flex items-center gap-1 rounded-sm bg-[var(--board)] px-2 py-0.5 text-xs text-[var(--ink)]">
+                      <span className="font-marker inline-flex shrink-0 items-center gap-1 rounded-sm bg-[var(--board)] px-2 py-0.5 text-xs text-[var(--ink)]">
                         <BellIcon /> Serve
                       </span>
                     )}
                     <span className={isServe ? "text-sm font-medium" : "text-sm text-[var(--ink)]"}>
                       {entry.description}
                     </span>
+                    {!isServe && <span className="text-xs text-[var(--ink-faint)]">{entry.kind}</span>}
+                  </div>
+                </div>
+
+                <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pl-[4.25rem]">
+                  <span
+                    className={`font-mono text-xs tabular-nums ${
+                      isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
+                    }`}
+                  >
+                    {entry.equipment
+                      .map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId))
+                      .join(", ")}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <StepTimer start={entry.start} finish={entry.finish} now={now} />
                     {!isServe && (
-                      <span className="text-xs text-[var(--ink-faint)]">{entry.kind}</span>
+                      <button
+                        type="button"
+                        onClick={() => addDelay(entry.stepIds[0], 5)}
+                        className="text-xs font-medium text-[var(--amber-text)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
+                      >
+                        +5 min late
+                      </button>
                     )}
                   </div>
-                  {entry.equipment.length > 0 && (
-                    <div
-                      className={`mt-0.5 font-mono text-xs tabular-nums ${
-                        isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
-                      }`}
-                    >
-                      {entry.equipment
-                        .map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId))
-                        .join(", ")}
-                    </div>
-                  )}
-                </div>
-                <div className="flex shrink-0 flex-col items-end gap-1">
-                  <StepTimer start={entry.start} finish={entry.finish} now={now} />
-                  {!isServe && (
-                    <button
-                      type="button"
-                      onClick={() => addDelay(entry.stepIds[0], 5)}
-                      className="text-xs text-[var(--amber)] underline decoration-dotted underline-offset-4 hover:text-[var(--amber-ink)]"
-                    >
-                      +5 min late
-                    </button>
-                  )}
                 </div>
               </div>
             </li>

@@ -29,7 +29,7 @@ export default function Home() {
         <div className="flex items-center gap-4 rounded-t-[3px] bg-[var(--frame)] px-4 py-2 sm:px-6">
           <span className="h-2.5 w-2.5 rounded-full bg-[var(--frame-light)]" aria-hidden />
           <span className="h-2.5 w-2.5 rounded-full bg-[var(--frame-light)]" aria-hidden />
-          <span className="ml-auto text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--frame-light)]">
+          <span className="ml-auto text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--frame-label)]">
             Kitchen line board
           </span>
         </div>

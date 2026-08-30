@@ -58,7 +58,7 @@ export function RecipeBuilder() {
         <button
           type="button"
           onClick={createRecipe}
-          className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--board)] hover:bg-[var(--frame-dark)]"
+          className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)]"
         >
           Pin dish
         </button>

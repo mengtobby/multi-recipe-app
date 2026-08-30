@@ -192,7 +192,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         <button
           type="button"
           onClick={submit}
-          className="rounded-sm bg-[var(--frame)] px-3 py-1.5 font-medium text-[var(--board)] hover:bg-[var(--frame-dark)]"
+          className="rounded-sm bg-[var(--frame)] px-3 py-1.5 font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)]"
         >
           {editingStep ? "Save step" : "Add step"}
         </button>

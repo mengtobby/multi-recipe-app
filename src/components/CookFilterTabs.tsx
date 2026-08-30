@@ -8,7 +8,7 @@ interface CookFilterTabsProps {
 
 function tagClassName(active: boolean): string {
   const state = active
-    ? "border-[var(--frame)] bg-[var(--frame)] text-[var(--board)]"
+    ? "border-[var(--frame)] bg-[var(--frame)] text-[var(--frame-label)]"
     : "border-[var(--frame-light)] bg-[var(--paper)] text-[var(--ink-muted)] hover:text-[var(--ink)]";
   return `rounded-sm border px-3 py-1 text-xs font-medium ${state}`;
 }

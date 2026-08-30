@@ -34,12 +34,16 @@
   /* ink + ui */
   --ink: #23262b;
   --ink-muted: #5b6066;
-  --ink-faint: #8b9096;
+  --ink-faint: #666c72;
   --paper: #fffdf8;
   --paper-edge: rgba(35, 38, 43, 0.14);
+  /* light-on-dark label, for text set directly on --frame (steel rail, active tab) */
+  --frame-label: #cfd2ce;
 
   /* signal colors — always paired with an icon/pattern, never color-only */
   --amber: #d98324;
+  /* amber as small text on the plain board/paper (not the amber-surface banner) */
+  --amber-text: #8a5213;
   --amber-ink: #5c3a0e;
   --amber-surface: #f6e3c4;
   --red: #b23a34;
@@ -73,11 +77,13 @@
 
     --ink: #f1efe4;
     --ink-muted: #b9bcae;
-    --ink-faint: #7d8177;
+    --ink-faint: #8d9184;
     --paper: #262c28;
     --paper-edge: rgba(241, 239, 228, 0.14);
+    --frame-label: #cfd2ce;
 
     --amber: #eeab52;
+    --amber-text: #eeab52;
     --amber-ink: #2c1c08;
     --amber-surface: #4a3814;
     --red: #e2827c;
