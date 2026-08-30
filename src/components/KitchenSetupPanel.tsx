@@ -16,7 +16,7 @@ export function KitchenSetupPanel() {
   };
 
   return (
-    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[3px_4px_0_var(--board-edge)]">
+    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
       <PushPin />
       <h2 className="font-marker mb-4 text-lg text-[var(--ink)]">Kitchen setup</h2>
 
@@ -111,7 +111,7 @@ function StepperButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-6 w-6 items-center justify-center rounded-sm border border-[var(--frame-light)] bg-[var(--paper)] text-sm leading-none text-[var(--ink)] shadow-[1px_1px_0_var(--board-edge)] hover:bg-[var(--board)] active:translate-y-px active:shadow-none"
+      className="flex h-6 w-6 items-center justify-center rounded-sm border border-[var(--frame-light)] bg-[var(--paper)] text-sm leading-none text-[var(--ink)] shadow-[1px_1px_2px_var(--board-edge)] hover:bg-[var(--board)] active:translate-y-px active:shadow-none"
     >
       {children}
     </button>

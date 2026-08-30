@@ -35,7 +35,7 @@ export default function Home() {
         </div>
 
         <header className="px-4 pb-2 pt-6 sm:px-8">
-          <div className="inline-block -rotate-1 rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] px-4 py-2 shadow-[2px_3px_0_var(--board-edge)]">
+          <div className="inline-block -rotate-1 rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] px-4 py-2 shadow-[2px_4px_6px_var(--board-edge)]">
             <h1 className="font-marker text-2xl leading-none text-[var(--ink)] sm:text-3xl">
               Tonight&apos;s line-up
             </h1>

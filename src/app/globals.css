@@ -116,7 +116,7 @@ body {
 
 @keyframes spine-draw {
   from {
-    stroke-dashoffset: var(--spine-length, 2000);
+    stroke-dashoffset: 1000;
   }
   to {
     stroke-dashoffset: 0;

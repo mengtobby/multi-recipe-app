@@ -75,7 +75,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
   };
 
   return (
-    <div className="space-y-3 rounded-sm border border-[var(--board-edge)] bg-[var(--paper)] p-3 text-sm text-[var(--ink)] shadow-[2px_3px_0_var(--board-edge)]">
+    <div className="space-y-3 rounded-sm border border-[var(--board-edge)] bg-[var(--paper)] p-3 text-sm text-[var(--ink)] shadow-[2px_4px_6px_var(--board-edge)]">
       <label className="block">
         <span className="mb-1 block font-medium">Step description</span>
         <input

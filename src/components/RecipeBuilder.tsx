@@ -35,7 +35,7 @@ export function RecipeBuilder() {
   );
 
   return (
-    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[3px_4px_0_var(--board-edge)]">
+    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
       <span
         aria-hidden
         className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"

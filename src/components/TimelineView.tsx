@@ -40,13 +40,20 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
     : timeline;
 
   return (
-    <section className="rounded-lg border border-black/10 bg-white/60 p-4 dark:border-white/10 dark:bg-white/5">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-black/60 dark:text-white/60">
-          Unified timeline
-        </h2>
+    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
+      <span
+        aria-hidden
+        className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"
+        style={{
+          background: "radial-gradient(circle at 35% 30%, #6fb98f, #2f7d52 70%)",
+          boxShadow: "0 2px 3px rgba(0,0,0,0.35)",
+        }}
+      />
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="font-marker text-lg text-[var(--ink)]">Unified timeline</h2>
         {!schedule.isFeasible && (
-          <span className="text-xs font-medium text-red-600 dark:text-red-400">
+          <span className="flex items-center gap-1.5 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-2 py-1 text-xs font-semibold text-[var(--red-ink)]">
+            <WarningIcon />
             Not enough time before target — start earlier or simplify the menu
           </span>
         )}
@@ -56,64 +63,139 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
         <CookFilterTabs cooks={cooks} selectedCookId={selectedCookId} onSelect={setSelectedCookId} />
       </div>
 
-      <ConflictBanner conflicts={schedule.conflicts} />
+      <div className="mb-3">
+        <ConflictBanner conflicts={schedule.conflicts} />
+      </div>
 
-      <ol className="mt-3 space-y-2">
+      <ol className="relative mt-4">
+        <svg
+          className="pointer-events-none absolute left-4 top-2 bottom-2 -ml-3 w-6"
+          viewBox="0 0 24 100"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <path
+            d="M12,0 C5,10 19,18 12,28 C5,38 19,46 12,56 C5,66 19,74 12,84 C7,90 17,94 12,100"
+            fill="none"
+            stroke="var(--ink-faint)"
+            strokeWidth="2"
+            vectorEffect="non-scaling-stroke"
+            pathLength={1000}
+            strokeDasharray={1000}
+            style={{ animation: "spine-draw 900ms ease-out forwards" }}
+          />
+        </svg>
+
         {visibleEntries.map((entry) => {
           const isServe = entry.stepIds.includes(SERVE_NODE_ID);
           const primaryRecipe = isServe ? null : recipeById.get(entry.recipeIds[0] ?? "");
 
           return (
-            <li
-              key={entry.stepIds.join("+")}
-              className="flex items-start gap-3 rounded-md border border-black/5 p-2 dark:border-white/10"
-              style={{ borderLeft: `4px solid ${primaryRecipe?.color ?? "#888"}` }}
-            >
-              <div className="w-16 shrink-0 pt-0.5 text-sm font-medium tabular-nums">
-                {formatClockTime(entry.start)}
+            <li key={entry.stepIds.join("+")} className="relative mb-3 flex items-start gap-3 last:mb-0">
+              <div className="flex w-8 shrink-0 justify-center pt-3">
+                <span
+                  className="h-3.5 w-3.5 rounded-full border border-black/10"
+                  style={{
+                    background: isServe
+                      ? "radial-gradient(circle at 35% 30%, #23262b, #000 70%)"
+                      : `radial-gradient(circle at 35% 30%, ${primaryRecipe?.color ?? "#8b9096"}dd, ${primaryRecipe?.color ?? "#8b9096"})`,
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.35)",
+                  }}
+                  aria-hidden
+                />
               </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  {!isServe && (
-                    <span
-                      className="rounded px-1.5 py-0.5 text-xs font-medium text-white"
-                      style={{ backgroundColor: primaryRecipe?.color ?? "#888" }}
-                    >
-                      {primaryRecipe?.name ?? "?"}
-                    </span>
-                  )}
-                  {isServe && (
-                    <span className="rounded bg-black/70 px-1.5 py-0.5 text-xs font-medium text-white dark:bg-white/70 dark:text-black">
-                      All dishes
-                    </span>
-                  )}
-                  <span className="text-sm">{entry.description}</span>
-                  <span className="text-xs text-black/40 dark:text-white/40">{entry.kind}</span>
+
+              <div
+                className={`flex flex-1 flex-wrap items-start gap-3 rounded-sm border p-2.5 sm:flex-nowrap ${
+                  isServe
+                    ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--board)]"
+                    : "border-[var(--board-edge)] bg-[var(--board)]"
+                }`}
+              >
+                <div
+                  className={`w-16 shrink-0 pt-0.5 font-mono text-sm font-medium tabular-nums ${
+                    isServe ? "text-[var(--board)]" : "text-[var(--ink)]"
+                  }`}
+                >
+                  {formatClockTime(entry.start)}
                 </div>
-                {entry.equipment.length > 0 && (
-                  <div className="mt-0.5 text-xs text-black/40 dark:text-white/40">
-                    {entry.equipment
-                      .map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId))
-                      .join(", ")}
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {!isServe && (
+                      <span
+                        className="rounded-sm px-1.5 py-0.5 text-xs font-medium text-white"
+                        style={{ backgroundColor: primaryRecipe?.color ?? "#8b9096" }}
+                      >
+                        {primaryRecipe?.name ?? "?"}
+                      </span>
+                    )}
+                    {isServe && (
+                      <span className="font-marker inline-flex items-center gap-1 rounded-sm bg-[var(--board)] px-2 py-0.5 text-xs text-[var(--ink)]">
+                        <BellIcon /> Serve
+                      </span>
+                    )}
+                    <span className={isServe ? "text-sm font-medium" : "text-sm text-[var(--ink)]"}>
+                      {entry.description}
+                    </span>
+                    {!isServe && (
+                      <span className="text-xs text-[var(--ink-faint)]">{entry.kind}</span>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="flex shrink-0 flex-col items-end gap-1">
-                <StepTimer start={entry.start} finish={entry.finish} now={now} />
-                {!isServe && (
-                  <button
-                    type="button"
-                    onClick={() => addDelay(entry.stepIds[0], 5)}
-                    className="text-xs text-amber-700 hover:underline dark:text-amber-400"
-                  >
-                    +5 min late
-                  </button>
-                )}
+                  {entry.equipment.length > 0 && (
+                    <div
+                      className={`mt-0.5 font-mono text-xs tabular-nums ${
+                        isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
+                      }`}
+                    >
+                      {entry.equipment
+                        .map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId))
+                        .join(", ")}
+                    </div>
+                  )}
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-1">
+                  <StepTimer start={entry.start} finish={entry.finish} now={now} />
+                  {!isServe && (
+                    <button
+                      type="button"
+                      onClick={() => addDelay(entry.stepIds[0], 5)}
+                      className="text-xs text-[var(--amber)] underline decoration-dotted underline-offset-4 hover:text-[var(--amber-ink)]"
+                    >
+                      +5 min late
+                    </button>
+                  )}
+                </div>
               </div>
             </li>
           );
         })}
       </ol>
     </section>
+  );
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+      <path d="M10 3.5c-2.2 0-3.5 1.7-3.5 4v2.2c0 .9-.3 1.7-.9 2.4l-.4.4h9.6l-.4-.4a3.4 3.4 0 0 1-.9-2.4V7.5c0-2.3-1.3-4-3.5-4Z" strokeLinejoin="round" />
+      <path d="M8.3 14.8a1.9 1.9 0 0 0 3.4 0" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function WarningIcon() {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      className="h-3.5 w-3.5 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      aria-hidden
+    >
+      <path d="M10 2.5 18.5 17H1.5L10 2.5Z" strokeLinejoin="round" />
+      <path d="M10 8v4" strokeLinecap="round" />
+      <circle cx="10" cy="14.5" r="0.75" fill="currentColor" stroke="none" />
+    </svg>
   );
 }
