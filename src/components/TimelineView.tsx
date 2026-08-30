@@ -161,7 +161,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                       <button
                         type="button"
                         onClick={() => addDelay(entry.stepIds[0], 5)}
-                        className="text-xs font-medium text-[var(--amber-text)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
+                        className="whitespace-nowrap text-xs font-medium text-[var(--amber-text)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
                       >
                         +5 min late
                       </button>
