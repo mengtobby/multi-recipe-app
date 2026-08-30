@@ -1,26 +1,151 @@
 @import "tailwindcss";
 
+/*
+  Kitchen Line Board — direction contract
+  THESIS: one synced kitchen whiteboard, not a settings dashboard — every dish
+  is a pinned chit hanging off one hand-ruled timeline spine, refusing the
+  flat generic SaaS card grid this category defaults to.
+  OWN-WORLD: dry-erase board (warm white/steel frame; chalkboard at night),
+  grease-pencil marker display type + tabular mono clock numerals, magnet-
+  colored dish chits, amber hazard-stripe for conflicts (never color alone).
+  STORY: cook sets serve time + dishes, sees one converging timeline, trusts
+  it at a glance mid-cook, catches equipment conflicts before they happen.
+  FIRST VIEWPORT: a steel-framed board fills the screen; header is a clipped
+  label card; left holds pinned index cards (setup, menu); right column is
+  the ruled timeline spine, chits hanging off it toward a final SERVE pin.
+  FORM: Kitchen Line Board — grounded candidate 3 of 7, seed key 6824ca98.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the
+  finish review, the verdict, DESIGN.md, and every shipping raster carrying
+  its provenance.
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* wall the board hangs on */
+  --wall: #cfcbc0;
+  --wall-shadow: rgba(30, 32, 30, 0.28);
+
+  /* the board surface itself */
+  --board: #f7f5ef;
+  --board-edge: rgba(35, 38, 43, 0.1);
+  --frame: #4b5157;
+  --frame-dark: #383d42;
+  --frame-light: #7d8389;
+
+  /* ink + ui */
+  --ink: #23262b;
+  --ink-muted: #5b6066;
+  --ink-faint: #8b9096;
+  --paper: #fffdf8;
+  --paper-edge: rgba(35, 38, 43, 0.14);
+
+  /* signal colors — always paired with an icon/pattern, never color-only */
+  --amber: #d98324;
+  --amber-ink: #5c3a0e;
+  --amber-surface: #f6e3c4;
+  --red: #b23a34;
+  --red-ink: #4a1712;
+  --red-surface: #f3d9d5;
+  --green: #2f7d52;
+  --green-surface: #dcefe1;
+
+  --focus-ring: #2f6fed;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--board);
+  --color-foreground: var(--ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-marker: var(--font-marker);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* chalkboard, not a generic dark theme */
+    --wall: #101312;
+    --wall-shadow: rgba(0, 0, 0, 0.6);
+
+    --board: #1d2320;
+    --board-edge: rgba(241, 239, 228, 0.1);
+    --frame: #2c3230;
+    --frame-dark: #181c1a;
+    --frame-light: #454c49;
+
+    --ink: #f1efe4;
+    --ink-muted: #b9bcae;
+    --ink-faint: #7d8177;
+    --paper: #262c28;
+    --paper-edge: rgba(241, 239, 228, 0.14);
+
+    --amber: #eeab52;
+    --amber-ink: #2c1c08;
+    --amber-surface: #4a3814;
+    --red: #e2827c;
+    --red-ink: #f5e6e4;
+    --red-surface: #4a2320;
+    --green: #7bcb9c;
+    --green-surface: #1f3c2c;
+
+    --focus-ring: #79a6ff;
   }
 }
 
+* {
+  scrollbar-color: var(--frame-light) transparent;
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--wall);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-marker {
+  font-family: var(--font-marker), var(--font-geist-sans), sans-serif;
+}
+
+@keyframes spine-draw {
+  from {
+    stroke-dashoffset: var(--spine-length, 2000);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.4) rotate(-8deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-2deg);
+  }
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.72);
+  }
 }
