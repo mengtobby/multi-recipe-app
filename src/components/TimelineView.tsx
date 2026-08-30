@@ -92,7 +92,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
           const primaryRecipe = isServe ? null : recipeById.get(entry.recipeIds[0] ?? "");
 
           return (
-            <li key={entry.stepIds.join("+")} className="relative mb-3 flex items-start gap-3 last:mb-0">
+            <li key={entry.stepIds.join("+")} className="relative mb-4 flex items-start last:mb-0">
               <div className="flex w-8 shrink-0 justify-center pt-3">
                 <span
                   className="h-3.5 w-3.5 rounded-full border border-black/10"
@@ -105,6 +105,9 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                   aria-hidden
                 />
               </div>
+
+              {/* tether: the chit visibly clips onto the spine rather than just sitting beside it */}
+              <span className="mt-[1.125rem] h-0.5 w-3 shrink-0 bg-[var(--ink-faint)]" aria-hidden />
 
               <div
                 className={`flex-1 rounded-sm border p-2.5 ${

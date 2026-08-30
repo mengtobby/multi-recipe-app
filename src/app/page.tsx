@@ -21,8 +21,8 @@ export default function Home() {
         className="mx-auto max-w-6xl rounded-md border-[3px] border-[var(--frame)] bg-[var(--board)] shadow-[0_18px_45px_var(--wall-shadow)]"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, var(--board-edge) 1px, transparent 0)",
-          backgroundSize: "16px 16px",
+            "radial-gradient(circle at 1px 1px, var(--board-edge) 1.4px, transparent 0)",
+          backgroundSize: "14px 14px",
         }}
       >
         {/* mounting rail */}
