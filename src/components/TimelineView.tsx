@@ -42,19 +42,22 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
 
   return (
     <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
-      <span
+      <svg
         aria-hidden
-        className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"
-        style={{
-          background: "radial-gradient(circle at 35% 30%, #6fb98f, #2f7d52 70%)",
-          boxShadow: "0 2px 3px rgba(0,0,0,0.35)",
-        }}
-      />
+        viewBox="0 0 32 18"
+        className="absolute -top-3 left-4 h-4 w-7"
+        style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
+      >
+        <path d="M3 13 L9 2 H23 L29 13 Z" fill="var(--frame-light)" stroke="var(--frame-dark)" strokeWidth="1" />
+        <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
+      </svg>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-marker text-lg text-[var(--ink)]">Unified timeline</h2>
+        <h2 className="font-marker text-lg text-[var(--ink)]">Order rail</h2>
         {!schedule.isFeasible && (
-          <span className="flex items-center gap-1.5 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-2 py-1 text-xs font-semibold text-[var(--red-ink)]">
-            <WarningIcon />
+          <span className="flex items-center gap-2 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-2 py-1 text-xs font-semibold text-[var(--red-ink)]">
+            <span className="font-marker -rotate-6 rounded-full border-2 border-[var(--red-ink)] px-1.5 py-px text-[9px] uppercase tracking-wide text-[var(--red-ink)]">
+              Stop
+            </span>
             Not enough time before target — start earlier or simplify the menu
           </span>
         )}
@@ -75,11 +78,21 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
           preserveAspectRatio="none"
           aria-hidden
         >
-          <path
-            d="M12,0 C5,10 19,18 12,28 C5,38 19,46 12,56 C5,66 19,74 12,84 C7,90 17,94 12,100"
-            fill="none"
-            stroke="var(--ink-faint)"
-            strokeWidth="2"
+          <defs>
+            <linearGradient id="rail-rod" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stopColor="var(--frame-dark)" />
+              <stop offset="45%" stopColor="var(--frame-light)" />
+              <stop offset="100%" stopColor="var(--frame-dark)" />
+            </linearGradient>
+          </defs>
+          <line
+            x1="12"
+            y1="0"
+            x2="12"
+            y2="100"
+            stroke="url(#rail-rod)"
+            strokeWidth="5"
+            strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
             pathLength={1000}
             strokeDasharray={1000}
@@ -93,28 +106,32 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
 
           return (
             <li key={entry.stepIds.join("+")} className="relative mb-4 flex items-start last:mb-0">
-              <div className="flex w-8 shrink-0 justify-center pt-3">
-                <span
-                  className="h-3.5 w-3.5 rounded-full border border-black/10"
-                  style={{
-                    background: isServe
-                      ? "radial-gradient(circle at 35% 30%, #23262b, #000 70%)"
-                      : `radial-gradient(circle at 35% 30%, ${primaryRecipe?.color ?? "#8b9096"}dd, ${primaryRecipe?.color ?? "#8b9096"})`,
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.35)",
-                  }}
-                  aria-hidden
-                />
+              <div className="flex w-8 shrink-0 justify-center pt-2.5">
+                {/* a ring clipped around the steel rail, in the dish's ticket-stock color */}
+                <svg viewBox="0 0 20 20" className="h-4 w-4" style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.35))" }} aria-hidden>
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="7"
+                    fill="none"
+                    stroke={isServe ? "var(--ink)" : primaryRecipe?.color ?? "#8b9096"}
+                    strokeWidth="3.5"
+                  />
+                </svg>
               </div>
 
-              {/* tether: the chit visibly clips onto the spine rather than just sitting beside it */}
-              <span className="mt-[1.125rem] h-0.5 w-3 shrink-0 bg-[var(--ink-faint)]" aria-hidden />
+              {/* the clip's arm: the ticket visibly hangs from the rail rather than sitting beside it */}
+              <span className="mt-[1.05rem] h-0.5 w-3 shrink-0 bg-[var(--frame-light)]" aria-hidden />
 
               <div
-                className={`flex-1 rounded-sm border p-2.5 ${
+                className={`flex-1 rounded-sm border-x border-b p-2.5 ${
                   isServe
                     ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--board)]"
                     : "border-[var(--board-edge)] bg-[var(--board)]"
                 }`}
+                style={{
+                  borderTop: `2px dashed ${isServe ? "var(--ink)" : "var(--board-edge)"}`,
+                }}
               >
                 <div className="flex items-baseline gap-3">
                   <span
@@ -185,23 +202,6 @@ function BellIcon() {
     <svg viewBox="0 0 20 20" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
       <path d="M10 3.5c-2.2 0-3.5 1.7-3.5 4v2.2c0 .9-.3 1.7-.9 2.4l-.4.4h9.6l-.4-.4a3.4 3.4 0 0 1-.9-2.4V7.5c0-2.3-1.3-4-3.5-4Z" strokeLinejoin="round" />
       <path d="M8.3 14.8a1.9 1.9 0 0 0 3.4 0" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function WarningIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      className="h-3.5 w-3.5 shrink-0"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      aria-hidden
-    >
-      <path d="M10 2.5 18.5 17H1.5L10 2.5Z" strokeLinejoin="round" />
-      <path d="M10 8v4" strokeLinecap="round" />
-      <circle cx="10" cy="14.5" r="0.75" fill="currentColor" stroke="none" />
     </svg>
   );
 }
