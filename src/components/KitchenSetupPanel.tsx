@@ -18,7 +18,7 @@ export function KitchenSetupPanel() {
   return (
     <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
       <RailClip />
-      <h2 className="font-marker mb-4 text-lg text-[var(--ink)]">Kitchen setup</h2>
+      <h2 className="font-stamp mb-4 text-lg text-[var(--ink)]">Kitchen setup</h2>
 
       <label className="mb-5 block">
         <span className="mb-1 flex items-center gap-1.5 text-sm font-medium text-[var(--ink)]">
@@ -126,8 +126,17 @@ function RailClip() {
       className="absolute -top-3 left-4 h-4 w-7"
       style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
     >
-      <path d="M3 13 L9 2 H23 L29 13 Z" fill="var(--frame-light)" stroke="var(--frame-dark)" strokeWidth="1" />
+      <defs>
+        <linearGradient id="clip-grad-setup" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--frame-light)" />
+          <stop offset="55%" stopColor="var(--frame)" />
+          <stop offset="100%" stopColor="var(--frame-dark)" />
+        </linearGradient>
+      </defs>
+      <path d="M3 13 L9 2 H23 L29 13 Z" fill="url(#clip-grad-setup)" stroke="var(--frame-dark)" strokeWidth="1" />
+      <path d="M6 11.5 L10.5 3.5" stroke="var(--frame-label)" strokeWidth="1" strokeLinecap="round" opacity="0.55" />
       <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
+      <rect x="13.6" y="6" width="1.2" height="8" rx="0.6" fill="var(--frame-light)" opacity="0.6" />
     </svg>
   );
 }

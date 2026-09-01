@@ -65,7 +65,7 @@
   --color-foreground: var(--ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-marker: var(--font-marker);
+  --font-stamp: var(--font-stamp);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -121,8 +121,8 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-.font-marker {
-  font-family: var(--font-marker), var(--font-geist-sans), sans-serif;
+.font-stamp {
+  font-family: var(--font-stamp), var(--font-geist-sans), sans-serif;
 }
 
 @keyframes spine-draw {

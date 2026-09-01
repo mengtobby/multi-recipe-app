@@ -16,8 +16,8 @@ export default function Home() {
   const timelinePanelClass = mobileTab === "timeline" ? "block" : "hidden lg:block";
 
   return (
-    <div className="min-h-full bg-[var(--wall)] px-3 py-4 sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-6xl rounded-md border-[3px] border-[var(--frame)] bg-[var(--board)] shadow-[0_18px_45px_var(--wall-shadow)]">
+    <div className="min-h-full bg-[var(--wall)] px-2 py-2 sm:px-4 sm:py-4">
+      <div className="mx-auto max-w-[100rem] rounded-md border-[3px] border-[var(--frame)] bg-[var(--board)] shadow-[0_18px_45px_var(--wall-shadow)]">
         {/* the steel rail along the top of the pass */}
         <div className="flex items-center gap-3 rounded-t-[3px] bg-[var(--frame)] px-4 py-2 sm:px-6">
           <BellIcon className="h-3.5 w-3.5 text-[var(--frame-label)]" />
@@ -33,7 +33,7 @@ export default function Home() {
             className="inline-block -rotate-1 rounded-sm bg-[var(--paper)] px-4 pb-3 pt-2 shadow-[2px_4px_6px_var(--board-edge)]"
             style={{ borderBottom: "2px dashed var(--board-edge)" }}
           >
-            <h1 className="font-marker text-2xl leading-none text-[var(--ink)] sm:text-3xl">
+            <h1 className="font-stamp text-2xl leading-none text-[var(--ink)] sm:text-3xl">
               Tonight&apos;s line-up
             </h1>
           </div>
@@ -68,7 +68,7 @@ export default function Home() {
             {!error && schedule && <TimelineView schedule={schedule} timeline={timeline} />}
             {!error && !schedule && (
               <div className="rounded-sm border-2 border-dashed border-[var(--ink-faint)] p-10 text-center">
-                <p className="font-marker text-lg text-[var(--ink-muted)]">Rail&apos;s empty</p>
+                <p className="font-stamp text-lg text-[var(--ink-muted)]">Rail&apos;s empty</p>
                 <p className="mx-auto mt-2 max-w-xs text-sm text-[var(--ink-muted)]">
                   Set a target serving time and clip at least one dish to see the synced timeline.
                 </p>

@@ -48,14 +48,23 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
         className="absolute -top-3 left-4 h-4 w-7"
         style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
       >
-        <path d="M3 13 L9 2 H23 L29 13 Z" fill="var(--frame-light)" stroke="var(--frame-dark)" strokeWidth="1" />
+        <defs>
+          <linearGradient id="clip-grad-timeline" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--frame-light)" />
+            <stop offset="55%" stopColor="var(--frame)" />
+            <stop offset="100%" stopColor="var(--frame-dark)" />
+          </linearGradient>
+        </defs>
+        <path d="M3 13 L9 2 H23 L29 13 Z" fill="url(#clip-grad-timeline)" stroke="var(--frame-dark)" strokeWidth="1" />
+        <path d="M6 11.5 L10.5 3.5" stroke="var(--frame-label)" strokeWidth="1" strokeLinecap="round" opacity="0.55" />
         <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
+        <rect x="13.6" y="6" width="1.2" height="8" rx="0.6" fill="var(--frame-light)" opacity="0.6" />
       </svg>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-marker text-lg text-[var(--ink)]">Order rail</h2>
+        <h2 className="font-stamp text-lg text-[var(--ink)]">Order rail</h2>
         {!schedule.isFeasible && (
           <span className="flex items-center gap-2 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-2 py-1 text-xs font-semibold text-[var(--red-ink)]">
-            <span className="font-marker -rotate-6 rounded-full border-2 border-[var(--red-ink)] px-1.5 py-px text-[9px] uppercase tracking-wide text-[var(--red-ink)]">
+            <span className="font-stamp -rotate-6 rounded-full border-2 border-[var(--red-ink)] px-1.5 py-px text-[9px] uppercase tracking-wide text-[var(--red-ink)]">
               Stop
             </span>
             Not enough time before target — start earlier or simplify the menu
@@ -125,12 +134,13 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
 
               <div
                 className={`flex-1 rounded-sm border-x border-b p-2.5 ${
-                  isServe
-                    ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--board)]"
-                    : "border-[var(--board-edge)] bg-[var(--board)]"
+                  isServe ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--board)]" : "border-[var(--board-edge)]"
                 }`}
                 style={{
                   borderTop: `2px dashed ${isServe ? "var(--ink)" : "var(--board-edge)"}`,
+                  backgroundColor: isServe
+                    ? undefined
+                    : `color-mix(in srgb, ${primaryRecipe?.color ?? "#8b9096"} 16%, var(--board))`,
                 }}
               >
                 <div className="flex items-baseline gap-3">
@@ -154,7 +164,7 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                       </span>
                     )}
                     {isServe && (
-                      <span className="font-marker inline-flex shrink-0 items-center gap-1 rounded-sm bg-[var(--board)] px-2 py-0.5 text-xs text-[var(--ink)]">
+                      <span className="font-stamp inline-flex shrink-0 items-center gap-1 rounded-sm bg-[var(--board)] px-2 py-0.5 text-xs text-[var(--ink)]">
                         <BellIcon /> Serve
                       </span>
                     )}

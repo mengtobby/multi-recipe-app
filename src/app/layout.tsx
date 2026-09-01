@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 const marker = Special_Elite({
-  variable: "--font-marker",
+  variable: "--font-stamp",
   weight: "400",
   subsets: ["latin"],
 });
