@@ -36,14 +36,15 @@ export function RecipeBuilder() {
 
   return (
     <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
-      <span
+      <svg
         aria-hidden
-        className="absolute -top-2 left-4 h-4 w-4 rounded-full border border-black/10"
-        style={{
-          background: "radial-gradient(circle at 35% 30%, #ffd873, #d98324 70%)",
-          boxShadow: "0 2px 3px rgba(0,0,0,0.35)",
-        }}
-      />
+        viewBox="0 0 32 18"
+        className="absolute -top-3 left-4 h-4 w-7"
+        style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
+      >
+        <path d="M3 13 L9 2 H23 L29 13 Z" fill="var(--frame-light)" stroke="var(--frame-dark)" strokeWidth="1" />
+        <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
+      </svg>
       <h2 className="font-marker mb-4 text-lg text-[var(--ink)]">Menu</h2>
 
       <div className="mb-4 flex gap-2">
@@ -60,7 +61,7 @@ export function RecipeBuilder() {
           onClick={createRecipe}
           className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)]"
         >
-          Pin dish
+          Clip dish
         </button>
       </div>
 
@@ -82,7 +83,7 @@ export function RecipeBuilder() {
                   onClick={() => removeRecipe(recipe.id)}
                   className="text-xs text-[var(--ink-faint)] hover:text-[var(--red)]"
                 >
-                  unpin dish
+                  unclip dish
                 </button>
               </div>
 
