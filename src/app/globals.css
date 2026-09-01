@@ -1,54 +1,59 @@
 @import "tailwindcss";
 
 /*
-  Kitchen Line Board — direction contract
-  THESIS: one synced kitchen whiteboard, not a settings dashboard — every dish
-  is a pinned chit hanging off one hand-ruled timeline spine, refusing the
-  flat generic SaaS card grid this category defaults to.
-  OWN-WORLD: dry-erase board (warm white/steel frame; chalkboard at night),
-  grease-pencil marker display type + tabular mono clock numerals, magnet-
-  colored dish chits, amber hazard-stripe for conflicts (never color alone).
-  STORY: cook sets serve time + dishes, sees one converging timeline, trusts
-  it at a glance mid-cook, catches equipment conflicts before they happen.
-  FIRST VIEWPORT: a steel-framed board fills the screen; header is a clipped
-  label card; left holds pinned index cards (setup, menu); right column is
-  the ruled timeline spine, chits hanging off it toward a final SERVE pin.
-  FORM: Kitchen Line Board — grounded candidate 3 of 7, seed key 6824ca98.
+  Expediter's Rail — direction contract
+  THESIS: the app is the ticket rail above a kitchen pass — every dish is a
+  torn paper chit clipped to one steel rail, riding toward the pass bell at
+  serve time, refusing the flat generic SaaS card grid this category defaults to.
+  OWN-WORLD: kraft order tickets under a cool steel rail (warm daylight pass;
+  a lamp-lit night pass in dark mode), a stamped-typewriter display voice +
+  tabular mono clock numerals, colored ticket stock per dish, a rubber-stamp
+  "HOLD" alert for conflicts (never color alone).
+  STORY: cook sets serve time + dishes, sees every ticket clipped to one rail
+  converging on the pass, trusts it at a glance mid-cook, catches equipment
+  conflicts before they happen.
+  FIRST VIEWPORT: a steel pass frame fills the screen; header is a stamped
+  ticket header; left holds order-pad cards (setup, menu); right column is
+  the vertical rail, tickets clipped to it toward a final SERVE bell.
+  FORM: Expediter's Rail — pinned directly by the user, superseding "Kitchen
+  Line Board" (seed key 6824ca98) as the committed world.
   FINISH: unreviewed and undocumented is unfinished; this build ends with the
   finish review, the verdict, DESIGN.md, and every shipping raster carrying
   its provenance.
 */
 
 :root {
-  /* wall the board hangs on */
-  --wall: #cfcbc0;
-  --wall-shadow: rgba(30, 32, 30, 0.28);
+  /* the pass counter everything sits on */
+  --wall: #c7bda3;
+  --wall-shadow: rgba(40, 30, 15, 0.32);
 
-  /* the board surface itself */
-  --board: #f2ecdb;
-  --board-edge: rgba(59, 47, 22, 0.16);
-  --frame: #4b5157;
-  --frame-dark: #383d42;
-  --frame-light: #7d8389;
+  /* a kraft order ticket */
+  --board: #ecdfc0;
+  --board-edge: rgba(58, 42, 16, 0.22);
+  /* the steel rail tickets clip to */
+  --frame: #565a5e;
+  --frame-dark: #3d4144;
+  --frame-light: #83878a;
 
   /* ink + ui */
-  --ink: #23262b;
-  --ink-muted: #5b6066;
-  --ink-faint: #5f656b;
-  --paper: #fffdf8;
-  --paper-edge: rgba(35, 38, 43, 0.14);
+  --ink: #2a2119;
+  --ink-muted: #5c4c38;
+  --ink-faint: #6b5c46;
+  /* an order-pad sheet (setup/menu cards) */
+  --paper: #f7f0dc;
+  --paper-edge: rgba(58, 42, 16, 0.16);
   /* light-on-dark label, for text set directly on --frame (steel rail, active tab) */
-  --frame-label: #cfd2ce;
+  --frame-label: #eef0ee;
 
-  /* signal colors — always paired with an icon/pattern, never color-only */
-  --amber: #d98324;
-  /* amber as small text on the plain board/paper (not the amber-surface banner) */
-  --amber-text: #8a5213;
-  --amber-ink: #5c3a0e;
-  --amber-surface: #f6e3c4;
-  --red: #b23a34;
+  /* signal colors — always paired with an icon/stamp, never color-only */
+  --amber: #c97a24;
+  /* amber as small text on the plain ticket/pad (not the amber-surface stamp) */
+  --amber-text: #7a4a12;
+  --amber-ink: #4a2f0c;
+  --amber-surface: #f0d59a;
+  --red: #b3261e;
   --red-ink: #4a1712;
-  --red-surface: #f3d9d5;
+  --red-surface: #f5d9d3;
   --green: #2f7d52;
   --green-surface: #dcefe1;
 
@@ -65,26 +70,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* chalkboard, not a generic dark theme */
-    --wall: #101312;
-    --wall-shadow: rgba(0, 0, 0, 0.6);
+    /* the pass at night, lamp-lit, not a generic dark theme */
+    --wall: #14110d;
+    --wall-shadow: rgba(0, 0, 0, 0.65);
 
-    --board: #1d2320;
-    --board-edge: rgba(241, 239, 228, 0.1);
-    --frame: #2c3230;
-    --frame-dark: #181c1a;
-    --frame-light: #454c49;
+    --board: #3a2f1e;
+    --board-edge: rgba(240, 225, 190, 0.16);
+    --frame: #3a3630;
+    --frame-dark: #221f1a;
+    --frame-light: #5c574c;
 
-    --ink: #f1efe4;
-    --ink-muted: #b9bcae;
-    --ink-faint: #8d9184;
-    --paper: #262c28;
-    --paper-edge: rgba(241, 239, 228, 0.14);
-    --frame-label: #cfd2ce;
+    --ink: #f1e6cc;
+    --ink-muted: #c9bda0;
+    --ink-faint: #b0a488;
+    --paper: #241e14;
+    --paper-edge: rgba(240, 225, 190, 0.14);
+    --frame-label: #eef0ee;
 
     --amber: #eeab52;
     --amber-text: #eeab52;
-    --amber-ink: #2c1c08;
+    --amber-ink: #f2e2bd;
     --amber-surface: #4a3814;
     --red: #e2827c;
     --red-ink: #f5e6e4;
