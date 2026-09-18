@@ -1,59 +1,59 @@
 @import "tailwindcss";
 
 /*
-  Expediter's Rail — direction contract
-  THESIS: the app is the ticket rail above a kitchen pass — every dish is a
-  torn paper chit clipped to one steel rail, riding toward the pass bell at
-  serve time, refusing the flat generic SaaS card grid this category defaults to.
-  OWN-WORLD: kraft order tickets under a cool steel rail (warm daylight pass;
-  a lamp-lit night pass in dark mode), a stamped-typewriter display voice +
-  tabular mono clock numerals, colored ticket stock per dish, a rubber-stamp
-  "HOLD" alert for conflicts (never color alone).
-  STORY: cook sets serve time + dishes, sees every ticket clipped to one rail
-  converging on the pass, trusts it at a glance mid-cook, catches equipment
-  conflicts before they happen.
-  FIRST VIEWPORT: a steel pass frame fills the screen; header is a stamped
-  ticket header; left holds order-pad cards (setup, menu); right column is
-  the vertical rail, tickets clipped to it toward a final SERVE bell.
-  FORM: Expediter's Rail — pinned directly by the user, superseding "Kitchen
-  Line Board" (seed key 6824ca98) as the committed world.
+  Sunday Table — direction contract
+  THESIS: the app reads like a food-editorial masthead, not a settings
+  dashboard — a bold red nameplate, a serif headline voice, and white
+  story-sheets, refusing the flat generic SaaS card grid this category
+  defaults to and the two prior kitchen-hardware worlds this project shipped.
+  OWN-WORLD: a warm newsprint-white page under a saturated masthead red,
+  bold serif headlines (Source Serif 4) for every section title, tabular
+  mono clock numerals, a gold "needs attention" alert and a bordered STOP
+  badge for infeasibility (never color alone).
+  STORY: cook opens the page to one hero card stating tonight's serve time
+  and status at a glance, then reads the menu and order rail as a short
+  stack of clean story-sheets, each headline doing its own work with no
+  stacked eyebrow above it.
+  FIRST VIEWPORT: a red masthead nameplate tops the page; directly below,
+  a white hero card states the serve time, dish count, and feasibility as
+  one bold serif headline; setup and menu sit left, the order rail right.
+  FORM: Sunday Table — pinned directly by the user from a reference image,
+  superseding "Expediter's Rail" as the committed world.
   FINISH: unreviewed and undocumented is unfinished; this build ends with the
   finish review, the verdict, DESIGN.md, and every shipping raster carrying
   its provenance.
 */
 
 :root {
-  /* the pass counter everything sits on */
-  --wall: #c7bda3;
-  --wall-shadow: rgba(40, 30, 15, 0.32);
+  /* the page itself: a warm newsprint white */
+  --wall: #faf6ef;
+  --wall-shadow: rgba(30, 20, 15, 0.16);
 
-  /* a kraft order ticket */
-  --board: #ecdfc0;
-  --board-edge: rgba(58, 42, 16, 0.22);
-  /* the steel rail tickets clip to */
-  --frame: #565a5e;
-  --frame-dark: #3d4144;
-  --frame-light: #83878a;
+  /* a white story-sheet / card */
+  --board: #ffffff;
+  --board-edge: rgba(20, 10, 5, 0.12);
+  /* the masthead red — a fixed brand color, does not invert with theme */
+  --frame: #c02f24;
+  --frame-dark: #98241b;
+  --frame-light: #e2685c;
+  --frame-label: #fff8f2;
 
   /* ink + ui */
-  --ink: #2a2119;
-  --ink-muted: #5c4c38;
-  --ink-faint: #6b5c46;
-  /* an order-pad sheet (setup/menu cards) */
-  --paper: #f7f0dc;
-  --paper-edge: rgba(58, 42, 16, 0.16);
-  /* light-on-dark label, for text set directly on --frame (steel rail, active tab) */
-  --frame-label: #eef0ee;
+  --ink: #201a16;
+  --ink-muted: #5c5049;
+  --ink-faint: #746a62;
+  /* a second, near-identical white for the outer section shell */
+  --paper: #fffdfa;
+  --paper-edge: rgba(20, 10, 5, 0.1);
 
-  /* signal colors — always paired with an icon/stamp, never color-only */
-  --amber: #c97a24;
-  /* amber as small text on the plain ticket/pad (not the amber-surface stamp) */
-  --amber-text: #7a4a12;
-  --amber-ink: #4a2f0c;
-  --amber-surface: #f0d59a;
-  --red: #b3261e;
-  --red-ink: #4a1712;
-  --red-surface: #f5d9d3;
+  /* signal colors — always paired with an icon/badge, never color-only */
+  --amber: #b8791f;
+  --amber-text: #7a4f10;
+  --amber-ink: #3d2705;
+  --amber-surface: #f3dfb0;
+  --red: #8c2318;
+  --red-ink: #430e08;
+  --red-surface: #f0d3ce;
   --green: #2f7d52;
   --green-surface: #dcefe1;
 
@@ -65,35 +65,36 @@
   --color-foreground: var(--ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-stamp: var(--font-stamp);
+  --font-display: var(--font-display);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* the pass at night, lamp-lit, not a generic dark theme */
-    --wall: #14110d;
-    --wall-shadow: rgba(0, 0, 0, 0.65);
+    /* the night edition: warm near-black, not a generic dark theme */
+    --wall: #16130f;
+    --wall-shadow: rgba(0, 0, 0, 0.6);
 
-    --board: #3a2f1e;
-    --board-edge: rgba(240, 225, 190, 0.16);
-    --frame: #3a3630;
-    --frame-dark: #221f1a;
-    --frame-light: #5c574c;
+    --board: #201b16;
+    --board-edge: rgba(255, 245, 235, 0.12);
+    /* the masthead red stays the same brand color in both editions */
+    --frame: #c02f24;
+    --frame-dark: #98241b;
+    --frame-light: #e2685c;
+    --frame-label: #fff8f2;
 
-    --ink: #f1e6cc;
-    --ink-muted: #c9bda0;
-    --ink-faint: #b0a488;
-    --paper: #241e14;
-    --paper-edge: rgba(240, 225, 190, 0.14);
-    --frame-label: #eef0ee;
+    --ink: #f2ece3;
+    --ink-muted: #c2b8ac;
+    --ink-faint: #a89c8e;
+    --paper: #241f19;
+    --paper-edge: rgba(255, 245, 235, 0.1);
 
-    --amber: #eeab52;
-    --amber-text: #eeab52;
-    --amber-ink: #f2e2bd;
-    --amber-surface: #4a3814;
-    --red: #e2827c;
-    --red-ink: #f5e6e4;
-    --red-surface: #4a2320;
+    --amber: #e0a83f;
+    --amber-text: #e0a83f;
+    --amber-ink: #f3e2bb;
+    --amber-surface: #4a3712;
+    --red: #d9776a;
+    --red-ink: #f7e2df;
+    --red-surface: #3d1712;
     --green: #7bcb9c;
     --green-surface: #1f3c2c;
 
@@ -106,8 +107,8 @@
 }
 
 ::selection {
-  background: var(--amber);
-  color: var(--amber-ink);
+  background: var(--frame);
+  color: var(--frame-label);
 }
 
 :focus-visible {
@@ -121,8 +122,8 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-.font-stamp {
-  font-family: var(--font-stamp), var(--font-geist-sans), sans-serif;
+.font-display {
+  font-family: var(--font-display), var(--font-geist-sans), serif;
 }
 
 @keyframes spine-draw {
