@@ -5,45 +5,42 @@ import { KitchenSetupPanel } from "@/components/KitchenSetupPanel";
 import { RecipeBuilder } from "@/components/RecipeBuilder";
 import { TimelineView } from "@/components/TimelineView";
 import { useSchedule } from "@/lib/store/useSchedule";
+import { useRecipeStore } from "@/lib/store/recipeStore";
+import { formatClockTime } from "@/lib/format";
+import type { ScheduleResult } from "@/lib/scheduler";
 
 type MobileTab = "timeline" | "setup";
 
 export default function Home() {
   const { schedule, timeline, error } = useSchedule();
+  const recipes = useRecipeStore((s) => s.recipes);
+  const cooks = useRecipeStore((s) => s.cooks);
   const [mobileTab, setMobileTab] = useState<MobileTab>("timeline");
 
   const setupPanelClass = mobileTab === "setup" ? "block" : "hidden lg:block";
   const timelinePanelClass = mobileTab === "timeline" ? "block" : "hidden lg:block";
+  const activeDishCount = recipes.filter((r) => r.steps.length > 0).length;
 
   return (
-    <div className="min-h-full bg-[var(--wall)] px-2 py-2 sm:px-4 sm:py-4">
-      <div className="mx-auto max-w-[100rem] rounded-md border-[3px] border-[var(--frame)] bg-[var(--board)] shadow-[0_18px_45px_var(--wall-shadow)]">
-        {/* the steel rail along the top of the pass */}
-        <div className="flex items-center gap-3 rounded-t-[3px] bg-[var(--frame)] px-4 py-2 sm:px-6">
-          <BellIcon className="h-3.5 w-3.5 text-[var(--frame-label)]" />
-          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--frame-label)]">
-            Kitchen pass
-          </span>
-          <span className="ml-auto h-2 w-2 rounded-full bg-[var(--frame-light)]" aria-hidden />
-          <span className="h-2 w-2 rounded-full bg-[var(--frame-light)]" aria-hidden />
-        </div>
+    <div className="min-h-full bg-[var(--wall)]">
+      <header className="bg-[var(--frame)] px-4 py-5 text-center sm:py-7">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[var(--frame-label)] opacity-80">
+          Home Kitchen
+        </p>
+        <h1 className="font-display mt-1 text-4xl font-bold text-[var(--frame-label)] sm:text-5xl">
+          Sunday Table
+        </h1>
+      </header>
 
-        <header className="px-4 pb-2 pt-6 sm:px-8">
-          <div
-            className="inline-block -rotate-1 rounded-sm bg-[var(--paper)] px-4 pb-3 pt-2 shadow-[2px_4px_6px_var(--board-edge)]"
-            style={{ borderBottom: "2px dashed var(--board-edge)" }}
-          >
-            <h1 className="font-stamp text-2xl leading-none text-[var(--ink)] sm:text-3xl">
-              Tonight&apos;s line-up
-            </h1>
-          </div>
-          <p className="mt-3 max-w-xl text-sm text-[var(--ink-muted)]">
-            Clip every dish to the rail, set a serve time, and the whole kitchen shares one
-            synced timeline.
-          </p>
-        </header>
+      <div className="mx-auto max-w-6xl px-3 py-5 sm:px-6 sm:py-8">
+        <HeroCard
+          schedule={schedule}
+          error={error}
+          dishCount={activeDishCount}
+          cookCount={cooks.length}
+        />
 
-        <nav className="mt-4 flex gap-2 border-b border-[var(--board-edge)] px-4 pb-3 sm:px-8 lg:hidden">
+        <nav className="mt-5 flex gap-2 border-b border-[var(--board-edge)] pb-3 lg:hidden">
           <TabButton active={mobileTab === "timeline"} onClick={() => setMobileTab("timeline")}>
             Timeline
           </TabButton>
@@ -52,7 +49,7 @@ export default function Home() {
           </TabButton>
         </nav>
 
-        <main className="grid grid-cols-1 gap-5 p-4 sm:p-8 lg:grid-cols-[340px_1fr] lg:gap-6">
+        <main className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[340px_1fr] lg:gap-6">
           <div className={`${setupPanelClass} space-y-5`}>
             <KitchenSetupPanel />
             <RecipeBuilder />
@@ -67,10 +64,12 @@ export default function Home() {
             )}
             {!error && schedule && <TimelineView schedule={schedule} timeline={timeline} />}
             {!error && !schedule && (
-              <div className="rounded-sm border-2 border-dashed border-[var(--ink-faint)] p-10 text-center">
-                <p className="font-stamp text-lg text-[var(--ink-muted)]">Rail&apos;s empty</p>
+              <div className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-10 text-center shadow-[2px_5px_10px_var(--board-edge)]">
+                <p className="font-display text-2xl font-semibold text-[var(--ink)]">
+                  Set tonight&apos;s table
+                </p>
                 <p className="mx-auto mt-2 max-w-xs text-sm text-[var(--ink-muted)]">
-                  Set a target serving time and clip at least one dish to see the synced timeline.
+                  Add a target serving time and at least one dish to see the synced timeline.
                 </p>
               </div>
             )}
@@ -78,6 +77,46 @@ export default function Home() {
         </main>
       </div>
     </div>
+  );
+}
+
+interface HeroCardProps {
+  schedule: ScheduleResult | null;
+  error: string | null;
+  dishCount: number;
+  cookCount: number;
+}
+
+function HeroCard({ schedule, error, dishCount, cookCount }: HeroCardProps) {
+  if (error || !schedule) return null;
+
+  const conflictCount = schedule.conflicts.length;
+  const servingLine =
+    cookCount > 1 ? `${dishCount} dishes · ${cookCount} cooks` : `${dishCount} dishes, one timeline`;
+
+  return (
+    <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)] sm:p-7">
+      <p className="font-display text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
+        {schedule.isFeasible ? <>Dinner&apos;s at {formatClockTime(schedule.targetEpochMinutes)}</> : <>Not enough time before dinner</>}
+      </p>
+      <p className="mt-2 text-sm text-[var(--ink-muted)]">{servingLine}</p>
+
+      {!schedule.isFeasible && (
+        <p className="mt-4 flex items-center gap-2 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-3 py-2 text-sm font-semibold text-[var(--red-ink)]">
+          <WarningIcon />
+          Start earlier or simplify the menu to make the target.
+        </p>
+      )}
+      {schedule.isFeasible && conflictCount > 0 && (
+        <p className="mt-4 flex items-center gap-2 rounded-sm border-2 border-[var(--amber)] bg-[var(--amber-surface)] px-3 py-2 text-sm font-semibold text-[var(--amber-ink)]">
+          <WarningIcon />
+          {conflictCount} equipment {conflictCount === 1 ? "conflict needs" : "conflicts need"} attention.
+        </p>
+      )}
+      {schedule.isFeasible && conflictCount === 0 && (
+        <p className="mt-4 text-sm font-medium text-[var(--green)]">Everything&apos;s on track.</p>
+      )}
+    </section>
   );
 }
 
@@ -106,23 +145,11 @@ function TabButton({
   );
 }
 
-function BellIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-      <path
-        d="M10 3.5c-2.2 0-3.5 1.7-3.5 4v2.2c0 .9-.3 1.7-.9 2.4l-.4.4h9.6l-.4-.4a3.4 3.4 0 0 1-.9-2.4V7.5c0-2.3-1.3-4-3.5-4Z"
-        strokeLinejoin="round"
-      />
-      <path d="M8.3 14.8a1.9 1.9 0 0 0 3.4 0" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function WarningIcon() {
   return (
     <svg
       viewBox="0 0 20 20"
-      className="mt-0.5 h-4 w-4 shrink-0"
+      className="h-4 w-4 shrink-0"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.6"
