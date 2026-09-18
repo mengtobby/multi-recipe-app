@@ -1,32 +1,32 @@
 ---
 name: Multi-Recipe Meal Coordinator
-description: The ticket rail above a kitchen pass — dishes clipped to one steel rail, riding toward the pass bell.
+description: A food-editorial masthead — red nameplate, serif headlines, white story-sheets — for a kitchen-timing coordinator.
 colors:
-  wall: "#c7bda3"
-  board: "#ecdfc0"
-  frame: "#565a5e"
-  frame-dark: "#3d4144"
-  frame-light: "#83878a"
-  frame-label: "#eef0ee"
-  ink: "#2a2119"
-  ink-muted: "#5c4c38"
-  ink-faint: "#6b5c46"
-  paper: "#f7f0dc"
-  amber: "#c97a24"
-  amber-text: "#7a4a12"
-  amber-ink: "#4a2f0c"
-  amber-surface: "#f0d59a"
-  red: "#b3261e"
-  red-ink: "#4a1712"
-  red-surface: "#f5d9d3"
+  wall: "#faf6ef"
+  board: "#ffffff"
+  frame: "#c02f24"
+  frame-dark: "#98241b"
+  frame-light: "#e2685c"
+  frame-label: "#fff8f2"
+  ink: "#201a16"
+  ink-muted: "#5c5049"
+  ink-faint: "#746a62"
+  paper: "#fffdfa"
+  amber: "#b8791f"
+  amber-text: "#7a4f10"
+  amber-ink: "#3d2705"
+  amber-surface: "#f3dfb0"
+  red: "#8c2318"
+  red-ink: "#430e08"
+  red-surface: "#f0d3ce"
   green: "#2f7d52"
   green-surface: "#dcefe1"
   fallback-neutral: "#8b9096"
 typography:
   display:
-    fontFamily: "var(--font-stamp), var(--font-geist-sans), sans-serif"
-    fontWeight: 400
-    lineHeight: 1
+    fontFamily: "var(--font-display), var(--font-geist-sans), serif"
+    fontWeight: 700
+    lineHeight: 1.05
   body:
     fontFamily: "var(--font-geist-sans), Arial, Helvetica, sans-serif"
     fontWeight: 400
@@ -34,127 +34,131 @@ typography:
   label:
     fontFamily: "var(--font-geist-mono)"
     letterSpacing: "normal"
-rounded:
-  sm: "2px"
-  md: "6px"
-  full: "9999px"
-spacing:
-  sm: "8px"
-  md: "16px"
 components:
   button-primary:
     backgroundColor: "{colors.frame}"
     textColor: "{colors.frame-label}"
-    rounded: "{rounded.sm}"
+    rounded: "2px"
     padding: "8px 12px"
   button-primary-hover:
     backgroundColor: "{colors.frame-dark}"
-  ticket:
-    backgroundColor: "{colors.board}"
+  story-card:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.sm}"
-    padding: "10px"
+    rounded: "2px"
+    padding: "20px"
+rounded:
+  sm: "2px"
+  full: "9999px"
+spacing:
+  sm: "8px"
+  md: "16px"
+  lg: "24px"
 ---
 
 # Design System: Multi-Recipe Meal Coordinator
 
 ## Overview
 
-**Creative North Star: "Expediter's Rail"**
+**Creative North Star: "Sunday Table"**
 
-The product is the ticket rail bolted above a kitchen pass: a cool steel rod that every dish's order ticket clips to, riding down toward the pass bell at serve time. Kraft-paper tickets under brushed steel, a stamped-typewriter voice for headers, and colored ticket stock per dish stand in for a settings dashboard. This is the second visual world this project has shipped — it replaces "Kitchen Line Board" (a dry-erase whiteboard world) outright, at the user's explicit direction, rather than refining it. Nothing about the whiteboard survives here except the underlying page structure (two-pane setup/timeline layout, mobile tab default) and the CSS custom-property names, which were kept stable and re-pointed at new values rather than renamed, to minimize the diff.
+The product reads like a food-editorial masthead rather than a settings dashboard: a saturated red nameplate at the top of every page, a bold serif headline voice for every section, and clean white story-sheets underneath. This is the third visual world this project has shipped this session — it replaces "Expediter's Rail" (a kitchen ticket-rail world) outright, at the user's explicit direction from a reference screenshot of a real food-media product's mobile app. Nothing about the ticket-rail world survives here except the underlying page structure (two-pane setup/timeline layout, mobile tab default) and most CSS custom-property names, kept stable and re-pointed at new values rather than renamed.
 
-The rejected defaults for this category are the cozy cookbook-blog look (cream paper, serif display, food photography) and the bare gray SaaS settings dashboard. This system also refuses its own predecessor's cooler, flatter whiteboard reading in favor of something warmer and more physically specific: a real service-industry object, not a generic "kitchen" mood.
+The reference image the user provided uses a small red label ("RECIPE OF THE DAY") stacked directly above its headline — a kicker/eyebrow. This project's craft floor names that exact device as the one absolute ban no brief earns back, so it is deliberately **not** reproduced anywhere except the single top-of-page masthead lockup (a small tagline over the big "Sunday Table" wordmark), which is brand identity rather than a recurring content label. Every other heading in the app (Kitchen setup, Menu, Timeline, the hero card) carries its own weight with no label above it — differentiated instead by a rule line, scale, and color, borrowed from a different, permitted newspaper convention: the section-header rule.
 
 **Key Characteristics:**
-- Warm kraft-paper tickets inside a cool brushed-steel frame — the two materials are deliberately different temperatures so the "paper clipped to metal" read survives at a glance.
-- Every ticket carries a faint wash of its own dish's color (`color-mix()` of the dish color into the board), so "colored ticket stock" is a property of the paper, not just its label.
-- A warm, lamp-lit night-pass dark mode, not a generic dark theme — the same kraft/steel materials, just under service lighting after dark.
-- Conflicts and infeasibility are marked with a rotated rubber-stamp badge ("HOLD" / "STOP") plus an icon, never color alone.
+- A saturated, fixed brand red (`--frame`) that does not invert between light and dark mode — brand identity, not a material tone.
+- A warm newsprint-white reading surface, distinct from a stark SaaS white.
+- A bold serif display voice (Source Serif 4) reserved for headlines and the masthead; never for body copy.
+- A rule line under every section heading — the newspaper section-divider, standing in for the eyebrow this project's craft floor forbids. Timeline's rule is drawn in brand red and its heading set larger than its siblings, reflecting its priority per PRODUCT.md.
+- One hero card, structurally distinguished from every other card by a heavy red top rule, extra padding, and the largest headline on the page — not just another item in the grid.
 
 ## Colors
 
-Two grounds (warm kraft ticket paper / cool steel) plus a small set of stamp-ink accents; per-dish identity uses an existing, separately-curated eight-color "ticket stock" palette rather than a role color.
+A warm off-white page and pure-white cards, with one fixed saturated red carrying the entire brand identity.
 
 ### Primary
-- **Steel Rail** (`#565a5e`, `#3d4144` pressed, `#3a3630` in dark mode): the rail itself, the top strip, and every primary button/active-tag surface. Paired with **Frame Label** (`#eef0ee`) for text — a fixed light neutral chosen because the frame stays a dark, cool steel tone in both themes, so `--board` (which inverts per theme, light kraft by day / dark kraft by night) cannot be reused as its text color.
+- **Masthead Red** (`#c02f24`, `#98241b` pressed, `#e2685c` light accent): the top nameplate bar, primary buttons, active tags, and every rule line that marks primary content (the Timeline heading's underline). Fixed across light and dark mode — a brand color, not a material that changes with ambient light. Paired with **Frame Label** (`#fff8f2`) for text, since `--board` (which inverts per theme) cannot safely sit on a surface that does not invert.
 
 ### Neutral
-- **Board / Kraft Ticket** (`#ecdfc0` light / `#3a2f1e` dark): the paper every ticket and Order Rail entry is printed on. Each entry additionally carries a ~16% wash of its dish's own color mixed into this base, via CSS `color-mix()`.
-- **Wall** (`#c7bda3` light / `#14110d` dark): the counter/backdrop the pass is mounted against.
-- **Paper / Order Pad** (`#f7f0dc` light / `#241e14` dark): the Kitchen setup, Menu, and Order Rail card shells themselves — a shade cleaner than the kraft tickets they hold.
-- **Ink** (`#2a2119` light / `#f1e6cc` dark): primary text, and — inverted — the fill of the final SERVE entry, the one place the pass's light/dark polarity flips to spotlight the finish line.
+- **Board** (`#ffffff` light / `#201b16` dark): every story-sheet — Kitchen setup, Menu, Timeline, the timeline's inline elements.
+- **Wall** (`#faf6ef` light / `#16130f` dark): the page background — a warm newsprint tone in light mode, a warm near-black "night edition" in dark mode, never a generic gray dark theme.
+- **Paper** (`#fffdfa` light / `#241f19` dark): a near-identical white to Board, used for the same story-sheet shells; kept as a separate token for future differentiation rather than collapsed into Board.
+- **Ink** (`#201a16` light / `#f2ece3` dark): primary text, and — inverted — the fill of the final Serve entry, the one place polarity flips to spotlight the finish line.
 
-### Signal (never color alone — always paired with a stamp badge and/or an icon)
-- **Amber** (`#c97a24`): the rotated "HOLD" rubber-stamp conflict alert. **Amber Text** (`#7a4a12` light / `#eeab52` dark) is a separate, contrast-checked token for amber used as small text (e.g. "+5 min late") on the plain ticket/pad — the saturated `--amber` itself fails 4.5:1 as text on the light board.
-- **Red** (`#b3261e`): the rotated "STOP" stamp on an infeasible schedule, destructive actions.
+### Signal (never color alone — always paired with an icon and explicit wording)
+- **Amber** (`#b8791f`): the "needs attention" alert for equipment conflicts, both in the hero card's one-line summary and the Timeline's per-conflict detail list.
+- **Red** (`#8c2318`, deliberately distinct from the brand `--frame` red): the infeasible-schedule alert. Kept as a separate, more muted/oxblood tone specifically so a safety-relevant "stop" state never visually reads as ordinary brand chrome.
 - **Green** (`#2f7d52`): the live "in progress" step timer, paired with a pulsing dot, never green text alone.
 
 ### Named Rules
-**The Paired-Token Rule.** Any color meant to sit on a surface that inverts between light and dark (the board, the ink) must never itself be that inverting token when used as text/foreground on a non-inverting surface (the frame). Use a dedicated fixed-neutral token (`frame-label`) instead. This rule exists because it was broken twice across this project's two visual worlds: once as a light/dark asymmetry bug (buttons and active tags went invisible in dark mode), and once as a same-surface bug (dark-mode `amber-ink` was dark text on a dark `amber-surface`, ~1.5:1 contrast, shipped because the conflict banner was never screenshotted in dark mode). Every `-surface`/`-ink` signal pair must be verified in *both* themes before shipping, not just its own theme's internal consistency.
+**The Paired-Token Rule.** Any color meant to sit on a surface that inverts between light and dark (Board, Ink) must never itself be that inverting token when used as text/foreground on a non-inverting surface (Frame). This project has shipped this exact bug twice already across its first two worlds — once as a light/dark asymmetry, once as a same-surface dark-mode-only failure that went undetected because the affected state was never screenshotted in dark mode. Every signal pair is now verified in both themes before shipping.
+
+**The Brand-Never-Inverts Rule.** Unlike every other color token, `--frame` and its variants hold the identical value in light and dark mode. A masthead brand color that changed hue between themes would read as a different product at night.
 
 ## Typography
 
-**Display Font:** Special Elite (`var(--font-stamp)`, fallback: Geist Sans, sans-serif) — a stamped-typewriter face
+**Display Font:** Source Serif 4 (`var(--font-display)`, fallback: Geist Sans, serif) — a bold editorial newspaper serif
 **Body Font:** Geist Sans (`var(--font-geist-sans)`, fallback: Arial, Helvetica, sans-serif)
 **Label/Mono Font:** Geist Mono (`var(--font-geist-mono)`) — reserved for measurement, never used decoratively
 
-**Character:** A stamped, printed-ticket voice for section titles and short badges, set against a plain, highly legible sans for every instruction and control — the stamp face is never used for body copy or data, only short single-line headers and tags.
+**Character:** A confident, bold serif voice for the masthead and every section headline, set against a plain, highly legible sans for every instruction, control, and list row — the serif is never used for body copy or dense repeated content, only short headline-scale text.
 
 ### Hierarchy
-- **Display** (400, `text-lg`–`text-2xl`/`text-3xl`, `leading-none`, `.font-stamp`): section headers ("Kitchen setup", "Menu", "Order rail"), the page title ticket, and the "Serve"/"HOLD"/"STOP" stamp labels. Never more than a few words.
-- **Body** (400–500, `text-sm`, 1.5 line-height): step descriptions, form labels, button text, all prose.
-- **Label/Mono** (500, `text-xs`–`text-sm`, tabular-nums): every clock time, duration, countdown, and equipment temperature. If it's a measurement, it's mono; nothing else is.
+- **Display** (700, `text-xl`–`text-5xl`, tight leading, `.font-display`): the masthead wordmark, the hero card's serve-time headline (largest text on the page), and every section title (Kitchen setup, Menu, Timeline). Headline scale varies by importance: Timeline's is a step larger than Kitchen setup/Menu, reflecting its priority as the page's primary surface.
+- **Body** (400–700, `text-sm`–`text-base`, 1.5 line-height): step descriptions, form labels, button text, all prose. Dish-identity badges use bold weight at small size on a colored chip.
+- **Label/Mono** (500–600, `text-xs`–`text-sm`, tabular-nums): every clock time, duration, countdown, and equipment temperature. If it's a measurement, it's mono; nothing else is.
 
 ### Named Rules
-**The Measurement-Is-Mono Rule.** Tabular mono is reserved for numbers a cook actually times against (clock times, minutes remaining, temperatures). It never appears as a "technical" costume on non-numeric labels.
+**The Measurement-Is-Mono Rule.** Tabular mono is reserved for numbers a cook actually times against. It never appears as a "technical" costume on non-numeric labels.
+
+**The No-Stacked-Eyebrow Rule.** No heading in this system carries a small label stacked above it, with exactly one exception: the top-of-page masthead lockup (tagline over wordmark), which is brand identity rendered once, not a recurring content pattern. This constraint came directly from the project's craft floor and overrode the literal reference image the user provided, which used a stacked kicker throughout. Differentiate headline importance with a rule line, color, and scale instead.
 
 ## Layout
 
-Two-column shell at `lg:` and above (`340px` setup/menu rail + flexible timeline column) inside a single steel-framed pass capped at `max-w-[100rem]`, mounted on a `--wall` background with a tight outer margin (`px-2 py-2` at rest, `sm:px-4 sm:py-4`) so the frame reads as dominating the viewport rather than a centered, heavily-margined card. Below `lg:`, the columns collapse to one, gated by a segmented "Timeline / Setup & menu" control that defaults to **Timeline** — the live view is the higher-priority context (a phone propped in the kitchen) and must never be buried under setup on first load. Card padding is `p-4` (16px); timeline entries use `p-2.5` (10px) with `mb-4` (16px) rhythm between entries.
+Two-column shell at `lg:` and above (`340px` setup/menu rail + flexible timeline column) inside a page capped at `max-w-6xl`, sitting on the warm `--wall` background below a full-width masthead bar. Below `lg:`, the columns collapse to one, gated by a segmented "Tonight / Setup & menu" control that defaults to **Tonight** (the live timeline) — the highest-priority context per PRODUCT.md (a phone propped in the kitchen) must never be buried under setup on first load. The hero status card sits directly below the masthead, full-width, above the two-column grid — the one element on the page that is not part of that grid.
 
 ## Elevation & Depth
 
-Hybrid: the pass frame lifts off the wall with a real soft shadow (`0 18px 45px`, tinted from `--wall-shadow`); pinned order-pad cards lift off the pass the same way, offset + blurred (`2px 5px 10px`), never a flat zero-blur block shadow. The rail clip icon and the tickets' magnet-ring nodes carry a tight drop-shadow, appropriate to their scale as small physical hardware rather than as panels.
+Cards lift off the page with a real soft shadow, offset and blurred, never a flat zero-blur block shadow. The hero card carries a heavier shadow than the setup/menu/timeline cards (`3px 8px 20px` vs `2px 5px 10px`) as one of the structural devices that marks it as the lead story rather than another grid item.
 
 ### Shadow Vocabulary
-- **Pass-on-wall** (`box-shadow: 0 18px 45px var(--wall-shadow)`): the one large lift, used once per page on the outer frame.
-- **Card-on-pass** (`box-shadow: 2px 5px 10px var(--board-edge)`): every order-pad card (Kitchen setup, Menu, Order rail) and the step-edit form.
-- **Small hardware** (`box-shadow: 1px 1px 2px var(--board-edge)`; `filter: drop-shadow(...)` on SVG icons): stepper buttons, the rail clip icon, the ticket rings.
+- **Hero lift** (`box-shadow: 3px 8px 20px var(--board-edge)`): the hero status card only.
+- **Card lift** (`box-shadow: 2px 5px 10px var(--board-edge)`): Kitchen setup, Menu, Timeline, and the step-edit form.
+- **Small control** (`box-shadow: 1px 1px 2px var(--board-edge)`): stepper buttons.
 
 ### Named Rules
-**The No-Flat-Block Rule.** Every shadow in this system carries both an offset and a blur. A zero-blur `Npx Npx 0` block shadow belongs to a neobrutalist world this project never chose, and is a defect if it appears.
+**The No-Flat-Block Rule.** Every shadow in this system carries both an offset and a blur. A zero-blur `Npx Npx 0` block shadow belongs to a neobrutalist world this project never chose.
 
 ## Shapes
 
-Small, near-square corners (`rounded-sm`, 2px) on every rectangular surface — cards, inputs, buttons, badges — reads as cut paper and cut steel rather than soft app-UI bubbles. The one larger radius (`rounded-md`, 6px) is reserved for the single outer pass frame. Every ticket carries a solid border on three sides and a **2px dashed top edge** — a torn-off-the-pad cue reused consistently from the page's title ticket down to every Order Rail entry. Circles are reserved for physical round objects: the rail clip's pincer, and the ring each ticket clips onto the rail with.
+Small, near-square corners (`rounded-sm`, 2px) on every rectangular surface. No larger radius exists anywhere in this world — a deliberate contrast with the two prior worlds, which each reserved one larger radius for an outer frame; this world has no outer frame, only the masthead bar and flat-topped cards.
 
 ## Components
 
 ### Buttons
 - **Shape:** `rounded-sm` (2px)
-- **Primary:** `background: var(--frame)`, `color: var(--frame-label)`, hover darkens to `var(--frame-dark)` — used for "Clip" and "Add step"
-- **Secondary/Text:** `color: var(--ink-muted)` with a dotted underline, hover to `var(--ink)` — used for "+ add step", "edit", "cancel"
+- **Primary:** `background: var(--frame)`, `color: var(--frame-label)`, hover darkens to `var(--frame-dark)` — used for "Add" (menu) and "Add step"
+- **Secondary/Text:** `color: var(--ink-muted)` with a dotted underline, hover to `var(--ink)`; the brand-red text-link variant (`color: var(--frame)`) is reserved for "+ add a cook", the one secondary action that benefits from brand-color emphasis
 
-### Chips / Tags
-- **Cook filter tabs:** unselected = `var(--paper)` bg / `var(--frame-light)` border / `var(--ink-muted)` text; active = `var(--frame)` bg / `var(--frame-label)` text (never `var(--board)` — see the Paired-Token Rule).
-- **Dish badge:** background is the dish's own ticket-stock color (from the existing 8-color palette); text color is computed per-badge via `readableTextColor()` (a WCAG luminance check), never hardcoded white.
-
-### Order Pad Cards
-- **Corner Style:** `rounded-sm`, with a steel `RailClip` SVG (a gradient-filled trapezoid + pincer rectangle, with a highlight stroke) at the top-left corner of Kitchen Setup, Menu, and Order Rail.
+### Story Cards (Kitchen Setup, Menu, Timeline)
+- **Corner Style:** `rounded-sm`, flat — no pinned decoration (no clip, no pushpin; those belonged to the two prior physical-object worlds)
+- **Heading:** bold serif with a rule line underneath (`border-bottom: 2px solid`) — black for Kitchen setup/Menu, brand red and one size larger for Timeline
 - **Background:** `var(--paper)`
-- **Shadow Strategy:** Card-on-pass (see Elevation).
-- **Internal Padding:** `p-4`, `pt-6` to clear the clip.
+- **Shadow Strategy:** Card lift (see Elevation)
 
-### Timeline Entry ("ticket")
-The signature component. A ring (stroked in the dish's own color, or `var(--ink)` for the final Serve entry) sits on the steel rail in a fixed-width column; a short 2px steel tether connects the ring to the ticket. The ticket itself is a `color-mix()`-tinted kraft card with a solid border on three sides and a dashed torn top edge, holding: a mono clock time, a dish-colored badge, the description, an equipment/kind line, and a right-aligned timer + delay control. The final "Serve" entry inverts to `var(--ink)` background / `var(--board)` text, the only place polarity flips, marking it as the milestone the whole rail converges on.
+### Hero Status Card (signature component)
+The one card structurally distinguished from the grid: a heavy `5px solid var(--frame)` top rule, extra padding, the heaviest shadow on the page, and the largest headline (serve time or infeasibility message). Below the headline: a plain summary line (dish/cook count), then exactly one status line — a green "on track" note, an amber "N conflicts" alert, or a red "not enough time" alert, matching the semantics used in the Timeline's own alerts below it.
 
-### Conflict / Infeasibility Stamps
-- **Conflict:** a rotated (`-12deg`), thick-bordered oval reading "HOLD" in the stamp face, on an `var(--amber-surface)`/`var(--amber-ink)` body — a rubber ink stamp, not a hazard stripe.
-- **Infeasible:** a matching small `-6deg` rotated "STOP" badge inside a `var(--red)`-bordered `var(--red-surface)` pill, placed directly in the Order Rail header.
+### Timeline Entry
+A plain divided list (`divide-y`), each entry two rows: time + dish badge + description + kind on top, equipment + timer + delay control below — never a single wrapping flex row, which breaks at narrow widths when the timer/delay block floats up next to the badge instead of staying under the description (a bug this project has now hit and fixed twice across two different worlds). The dish badge is always a colored chip with text color computed by `readableTextColor()`, never colored text directly on the white card — several of the eight dish colors fail contrast outright as plain text on white. The final Serve entry inverts to `var(--ink)` background / `var(--board)` text, the one polarity flip on the page.
+
+### Conflict / Infeasibility Alerts
+- **Conflict:** a plain bordered amber box with a warning icon and bold text, both in the hero card's one-line summary and the Timeline's detailed per-conflict list — no stamp, no rotation, no hazard pattern; those belonged to the two prior worlds.
+- **Infeasible:** the same treatment in the distinct oxblood `--red` (not the brand `--frame` red), so a safety-relevant stop state never reads as ordinary brand chrome.
 
 ### Inputs / Fields
-- **Style:** `var(--board)` background, `var(--frame-light)` border, `rounded-sm`
+- **Style:** `var(--board)` background, a neutral `var(--ink-faint)/40` border (never `var(--frame-light)`, which is a bright red/pink unsuited to a plain input border), `rounded-sm`
 - **Focus:** browser-default focus ring recolored to `var(--focus-ring)` via `:focus-visible`
 
 ### Step Timer (signature micro-component)
@@ -163,15 +167,16 @@ Three states, keyed by React `key` on status so the DOM element remounts and its
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep every shadow offset-plus-blur; this is a physical-object world, not a neobrutalist one.
-- **Do** verify every `-surface`/`-ink` signal pair in both light and dark mode before shipping — this project has shipped the same class of dark-mode-only contrast bug twice.
-- **Do** tint each ticket's own background with its dish's color via `color-mix()`, not just its badge — "colored ticket stock" is a property of the paper.
-- **Do** compute dish-badge text color from the badge's own background (`readableTextColor()`); never assume white or black text works for an arbitrary per-dish color.
-- **Do** default the mobile view to the Timeline tab, never Setup — kitchen-during-cooking is the highest-priority context per PRODUCT.md.
+- **Do** verify every `-surface`/`-ink` signal pair in both light and dark mode before shipping — this project has shipped the same class of dark-mode contrast bug twice.
+- **Do** structure a timeline/list row's timer-and-actions block as its own row below the description, never a third item in the same flex-wrap line as the time and description — that ordering breaks identically every time at narrow widths.
+- **Do** compute dish-badge text color from the badge's own background (`readableTextColor()`); never assume a raw dish color works as plain text against a fixed page background.
+- **Do** default the mobile view to the live timeline tab, never Setup — kitchen-during-cooking is the highest-priority context per PRODUCT.md.
+- **Do** differentiate a hero/lead element from its siblings with a structural device (a rule, a scale jump, extra shadow) — color and font alone, applied uniformly, reads as a reskin rather than a hierarchy.
 
 ### Don't:
-- **Don't** use `var(--board)` as a text/foreground color on `var(--frame)` — `--board` inverts per theme, `--frame` does not, and the pairing goes invisible in dark mode. Use `var(--frame-label)`.
-- **Don't** add a colored `border-left`/`border-right` to cards, list items, or alerts to encode category — dish identity is carried by the ring and the ticket's own color wash, not a side stripe.
+- **Don't** stack a small label above any heading except the one top-of-page masthead lockup. This is an absolute constraint from the project's craft floor, not a style preference — it held even against a literal user-provided reference image that used the device throughout.
+- **Don't** use `var(--board)` as a text/foreground color on `var(--frame)` — `--board` inverts per theme, `--frame` does not.
+- **Don't** add a colored `border-left`/`border-right` to cards, list items, or alerts to encode category — dish identity is carried by the badge, not a side stripe.
 - **Don't** use an emoji or unicode glyph as an icon. Every icon in this system is an authored inline SVG at one consistent stroke weight.
-- **Don't** use the stamp display face for body copy, descriptions, or anything longer than a short label — it is a header/badge voice only.
-- **Don't** name a CSS token or class after a *previous* world's material once its value changes — rename it (this project once shipped `--font-marker` holding a typewriter font, confusing to anyone reading it cold).
+- **Don't** use the display serif for body copy, descriptions, or dense repeated content — it is a headline voice only.
+- **Don't** name a CSS token or class after a *specific* world's material — this project learned that lesson renaming `--font-marker` (world 1) to `--font-stamp` (world 2) before finally generalizing to `--font-display` here, which should survive any future world change without another rename.
