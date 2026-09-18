@@ -8,14 +8,7 @@ export function ConflictBanner({ conflicts }: ConflictBannerProps) {
   if (conflicts.length === 0) return null;
 
   return (
-    <div className="relative overflow-hidden rounded-sm border-2 border-[var(--amber)] bg-[var(--amber-surface)] py-3 pl-16 pr-3 text-sm text-[var(--amber-ink)]">
-      <div
-        aria-hidden
-        className="font-stamp absolute left-3 top-1/2 -translate-y-1/2 -rotate-12 rounded-full border-[3px] border-[var(--amber-ink)] px-2 py-1 text-[10px] uppercase tracking-wide text-[var(--amber-ink)]"
-        style={{ opacity: 0.85 }}
-      >
-        Hold
-      </div>
+    <div className="rounded-sm border-2 border-[var(--amber)] bg-[var(--amber-surface)] p-3 text-sm text-[var(--amber-ink)]">
       <p className="mb-1 flex items-center gap-2 font-semibold">
         <HazardIcon />
         Equipment conflicts need your attention

@@ -35,26 +35,8 @@ export function RecipeBuilder() {
   );
 
   return (
-    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
-      <svg
-        aria-hidden
-        viewBox="0 0 32 18"
-        className="absolute -top-3 left-4 h-4 w-7"
-        style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
-      >
-        <defs>
-          <linearGradient id="clip-grad-menu" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="var(--frame-light)" />
-            <stop offset="55%" stopColor="var(--frame)" />
-            <stop offset="100%" stopColor="var(--frame-dark)" />
-          </linearGradient>
-        </defs>
-        <path d="M3 13 L9 2 H23 L29 13 Z" fill="url(#clip-grad-menu)" stroke="var(--frame-dark)" strokeWidth="1" />
-        <path d="M6 11.5 L10.5 3.5" stroke="var(--frame-label)" strokeWidth="1" strokeLinecap="round" opacity="0.55" />
-        <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
-        <rect x="13.6" y="6" width="1.2" height="8" rx="0.6" fill="var(--frame-light)" opacity="0.6" />
-      </svg>
-      <h2 className="font-stamp mb-4 text-lg text-[var(--ink)]">Menu</h2>
+    <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
+      <h2 className="font-display mb-4 text-xl font-semibold text-[var(--ink)]">Menu</h2>
 
       <div className="mb-4 flex gap-2">
         <input
@@ -63,14 +45,14 @@ export function RecipeBuilder() {
           onChange={(e) => setNewRecipeName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && createRecipe()}
           placeholder="Add a dish, e.g. Roast Chicken"
-          className="flex-1 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-faint)]"
+          className="flex-1 rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-faint)]"
         />
         <button
           type="button"
           onClick={createRecipe}
           className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)]"
         >
-          Clip
+          Add
         </button>
       </div>
 
@@ -92,7 +74,7 @@ export function RecipeBuilder() {
                   onClick={() => removeRecipe(recipe.id)}
                   className="text-xs text-[var(--ink-faint)] hover:text-[var(--red)]"
                 >
-                  unclip dish
+                  remove dish
                 </button>
               </div>
 

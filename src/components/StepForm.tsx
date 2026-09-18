@@ -83,7 +83,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           value={input.description}
           onChange={(e) => setInput((p) => ({ ...p, description: e.target.value }))}
           placeholder='e.g. "Season chicken & place in oven"'
-          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
+          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
         />
       </label>
 
@@ -95,7 +95,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
             min={1}
             value={input.durationMinutes}
             onChange={(e) => setInput((p) => ({ ...p, durationMinutes: Number(e.target.value) }))}
-            className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 font-mono tabular-nums"
+            className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 font-mono tabular-nums"
           />
         </label>
         <label className="flex-1">
@@ -103,7 +103,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           <select
             value={input.kind}
             onChange={(e) => setInput((p) => ({ ...p, kind: e.target.value as StepKind }))}
-            className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2"
+            className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2"
           >
             <option value="active">Active (hands-on)</option>
             <option value="passive">Passive (unattended)</option>
@@ -116,7 +116,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         <select
           value={input.assignedCook ?? ""}
           onChange={(e) => setInput((p) => ({ ...p, assignedCook: e.target.value || undefined }))}
-          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2"
+          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2"
         >
           <option value="">Unassigned</option>
           {cooks.map((cook) => (
@@ -134,7 +134,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
           value={input.batchKey ?? ""}
           onChange={(e) => setInput((p) => ({ ...p, batchKey: e.target.value || undefined }))}
           placeholder='e.g. "chop-garlic" — combines with same-key steps at the same time'
-          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
+          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
         />
       </label>
 
@@ -160,7 +160,7 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
                     placeholder="°F"
                     value={usage.tempF ?? ""}
                     onChange={(e) => setEquipmentTemp(resource.id, e.target.value ? Number(e.target.value) : undefined)}
-                    className="w-20 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-2 py-1 text-right font-mono tabular-nums"
+                    className="w-20 rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-2 py-1 text-right font-mono tabular-nums"
                   />
                 )}
               </div>

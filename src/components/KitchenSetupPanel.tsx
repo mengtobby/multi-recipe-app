@@ -16,9 +16,8 @@ export function KitchenSetupPanel() {
   };
 
   return (
-    <section className="relative rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-4 pt-6 shadow-[2px_5px_10px_var(--board-edge)]">
-      <RailClip />
-      <h2 className="font-stamp mb-4 text-lg text-[var(--ink)]">Kitchen setup</h2>
+    <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
+      <h2 className="font-display mb-4 text-xl font-semibold text-[var(--ink)]">Kitchen setup</h2>
 
       <label className="mb-5 block">
         <span className="mb-1 flex items-center gap-1.5 text-sm font-medium text-[var(--ink)]">
@@ -28,7 +27,7 @@ export function KitchenSetupPanel() {
           type="datetime-local"
           value={targetDateTime}
           onChange={(e) => setTargetDateTime(e.target.value)}
-          className="w-full rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-3 py-2 font-mono text-sm tabular-nums text-[var(--ink)]"
+          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 font-mono text-sm tabular-nums text-[var(--ink)]"
         />
       </label>
 
@@ -38,7 +37,7 @@ export function KitchenSetupPanel() {
           {kitchenResources.map((resource) => (
             <div
               key={resource.id}
-              className="flex items-center justify-between gap-3 rounded-sm bg-[var(--board)]/60 px-2 py-1.5"
+              className="flex items-center justify-between gap-3 rounded-sm bg-[var(--board)] px-2 py-1.5"
             >
               <span className="text-sm text-[var(--ink)]">{resource.name}</span>
               <div className="flex items-center gap-1.5">
@@ -64,12 +63,12 @@ export function KitchenSetupPanel() {
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Cooks on the line</span>
+        <span className="mb-2 block text-sm font-medium text-[var(--ink)]">Cooks</span>
         <ul className="mb-2 flex flex-wrap gap-2">
           {cooks.map((cook) => (
             <li
               key={cook.id}
-              className="flex items-center gap-1.5 rounded-sm border border-[var(--frame-light)] bg-[var(--board)] px-2 py-1 text-sm text-[var(--ink)]"
+              className="flex items-center gap-1.5 rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-2 py-1 text-sm text-[var(--ink)]"
             >
               {cook.name}
               {cooks.length > 1 && (
@@ -88,9 +87,9 @@ export function KitchenSetupPanel() {
         <button
           type="button"
           onClick={() => addCook(`Cook ${cooks.length + 1}`)}
-          className="text-sm font-medium text-[var(--ink-muted)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
+          className="text-sm font-medium text-[var(--frame)] underline decoration-dotted underline-offset-4 hover:text-[var(--frame-dark)]"
         >
-          + clip a cook
+          + add a cook
         </button>
       </div>
     </section>
@@ -111,33 +110,10 @@ function StepperButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-6 w-6 items-center justify-center rounded-sm border border-[var(--frame-light)] bg-[var(--paper)] text-sm leading-none text-[var(--ink)] shadow-[1px_1px_2px_var(--board-edge)] hover:bg-[var(--board)] active:translate-y-px active:shadow-none"
+      className="flex h-6 w-6 items-center justify-center rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--paper)] text-sm leading-none text-[var(--ink)] shadow-[1px_1px_2px_var(--board-edge)] hover:bg-[var(--board)] active:translate-y-px active:shadow-none"
     >
       {children}
     </button>
-  );
-}
-
-function RailClip() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 32 18"
-      className="absolute -top-3 left-4 h-4 w-7"
-      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.35))" }}
-    >
-      <defs>
-        <linearGradient id="clip-grad-setup" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--frame-light)" />
-          <stop offset="55%" stopColor="var(--frame)" />
-          <stop offset="100%" stopColor="var(--frame-dark)" />
-        </linearGradient>
-      </defs>
-      <path d="M3 13 L9 2 H23 L29 13 Z" fill="url(#clip-grad-setup)" stroke="var(--frame-dark)" strokeWidth="1" />
-      <path d="M6 11.5 L10.5 3.5" stroke="var(--frame-label)" strokeWidth="1" strokeLinecap="round" opacity="0.55" />
-      <rect x="12.5" y="5" width="7" height="10" rx="1.2" fill="var(--frame-dark)" />
-      <rect x="13.6" y="6" width="1.2" height="8" rx="0.6" fill="var(--frame-light)" opacity="0.6" />
-    </svg>
   );
 }
 
