@@ -61,27 +61,26 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
           return (
             <li
               key={entry.stepIds.join("+")}
-              className={`flex flex-wrap items-start gap-x-4 gap-y-1 py-3 first:pt-0 last:pb-0 ${
+              className={`py-3 first:pt-0 last:pb-0 ${
                 isServe ? "-mx-5 mt-1 border-y-0 bg-[var(--ink)] px-5 py-4 text-[var(--board)]" : ""
               }`}
             >
-              <span
-                className={`w-14 shrink-0 font-mono text-sm font-semibold tabular-nums ${
-                  isServe ? "text-[var(--board)]" : "text-[var(--ink)]"
-                }`}
-              >
-                {formatClockTime(entry.start)}
-              </span>
-
-              <div className="min-w-0 flex-1">
-                <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <div className="flex items-baseline gap-3">
+                <span
+                  className={`w-14 shrink-0 font-mono text-sm font-semibold tabular-nums ${
+                    isServe ? "text-[var(--board)]" : "text-[var(--ink)]"
+                  }`}
+                >
+                  {formatClockTime(entry.start)}
+                </span>
+                <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   {isServe ? (
-                    <span className="font-display inline-flex items-center gap-1 text-base font-semibold">
+                    <span className="font-display inline-flex shrink-0 items-center gap-1 text-base font-semibold">
                       <BellIcon /> Serve
                     </span>
                   ) : (
                     <span
-                      className="rounded-sm px-1.5 py-0.5 text-xs font-bold"
+                      className="shrink-0 rounded-sm px-1.5 py-0.5 text-xs font-bold"
                       style={{ backgroundColor: dishColor, color: readableTextColor(dishColor) }}
                     >
                       {primaryRecipe?.name ?? "?"}
@@ -89,29 +88,29 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                   )}
                   <span className={isServe ? "text-sm" : "text-sm text-[var(--ink)]"}>{entry.description}</span>
                   {!isServe && <span className="text-xs text-[var(--ink-faint)]">{entry.kind}</span>}
-                </p>
-                {entry.equipment.length > 0 && (
-                  <p
-                    className={`mt-0.5 font-mono text-xs tabular-nums ${
-                      isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
-                    }`}
-                  >
-                    {entry.equipment.map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId)).join(", ")}
-                  </p>
-                )}
+                </div>
               </div>
 
-              <div className="flex shrink-0 items-center gap-3">
-                <StepTimer start={entry.start} finish={entry.finish} now={now} />
-                {!isServe && (
-                  <button
-                    type="button"
-                    onClick={() => addDelay(entry.stepIds[0], 5)}
-                    className="whitespace-nowrap text-xs font-medium text-[var(--amber-text)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
-                  >
-                    +5 min late
-                  </button>
-                )}
+              <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pl-[4.25rem]">
+                <span
+                  className={`font-mono text-xs tabular-nums ${
+                    isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
+                  }`}
+                >
+                  {entry.equipment.map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId)).join(", ")}
+                </span>
+                <div className="flex items-center gap-3">
+                  <StepTimer start={entry.start} finish={entry.finish} now={now} />
+                  {!isServe && (
+                    <button
+                      type="button"
+                      onClick={() => addDelay(entry.stepIds[0], 5)}
+                      className="whitespace-nowrap text-xs font-medium text-[var(--amber-text)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
+                    >
+                      +5 min late
+                    </button>
+                  )}
+                </div>
               </div>
             </li>
           );

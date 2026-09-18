@@ -91,8 +91,9 @@ function HeroCard({ schedule, error, dishCount, cookCount }: HeroCardProps) {
   if (error || !schedule) return null;
 
   const conflictCount = schedule.conflicts.length;
+  const dishWord = dishCount === 1 ? "dish" : "dishes";
   const servingLine =
-    cookCount > 1 ? `${dishCount} dishes · ${cookCount} cooks` : `${dishCount} dishes, one timeline`;
+    cookCount > 1 ? `${dishCount} ${dishWord} · ${cookCount} cooks` : `${dishCount} ${dishWord}, one timeline`;
 
   return (
     <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)] sm:p-7">
