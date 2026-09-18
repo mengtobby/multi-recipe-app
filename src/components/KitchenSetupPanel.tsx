@@ -17,7 +17,9 @@ export function KitchenSetupPanel() {
 
   return (
     <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
-      <h2 className="font-display mb-4 text-xl font-semibold text-[var(--ink)]">Kitchen setup</h2>
+      <h2 className="font-display mb-4 border-b-2 border-[var(--ink)] pb-2 text-xl font-semibold text-[var(--ink)]">
+        Kitchen setup
+      </h2>
 
       <label className="mb-5 block">
         <span className="mb-1 flex items-center gap-1.5 text-sm font-medium text-[var(--ink)]">

@@ -42,7 +42,9 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
 
   return (
     <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
-      <h2 className="font-display mb-4 text-xl font-semibold text-[var(--ink)]">Timeline</h2>
+      <h2 className="font-display mb-4 border-b-2 border-[var(--frame)] pb-2 text-2xl font-semibold text-[var(--ink)]">
+        Timeline
+      </h2>
 
       <div className="mb-3">
         <CookFilterTabs cooks={cooks} selectedCookId={selectedCookId} onSelect={setSelectedCookId} />

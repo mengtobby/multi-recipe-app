@@ -36,7 +36,9 @@ export function RecipeBuilder() {
 
   return (
     <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
-      <h2 className="font-display mb-4 text-xl font-semibold text-[var(--ink)]">Menu</h2>
+      <h2 className="font-display mb-4 border-b-2 border-[var(--ink)] pb-2 text-xl font-semibold text-[var(--ink)]">
+        Menu
+      </h2>
 
       <div className="mb-4 flex gap-2">
         <input

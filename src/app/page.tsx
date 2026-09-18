@@ -42,7 +42,7 @@ export default function Home() {
 
         <nav className="mt-5 flex gap-2 border-b border-[var(--board-edge)] pb-3 lg:hidden">
           <TabButton active={mobileTab === "timeline"} onClick={() => setMobileTab("timeline")}>
-            Timeline
+            Tonight
           </TabButton>
           <TabButton active={mobileTab === "setup"} onClick={() => setMobileTab("setup")}>
             Setup &amp; menu
@@ -96,8 +96,11 @@ function HeroCard({ schedule, error, dishCount, cookCount }: HeroCardProps) {
     cookCount > 1 ? `${dishCount} ${dishWord} · ${cookCount} cooks` : `${dishCount} ${dishWord}, one timeline`;
 
   return (
-    <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)] sm:p-7">
-      <p className="font-display text-3xl font-bold leading-tight text-[var(--ink)] sm:text-4xl">
+    <section
+      className="rounded-sm bg-[var(--paper)] p-6 shadow-[3px_8px_20px_var(--board-edge)] sm:p-9"
+      style={{ borderTop: "5px solid var(--frame)" }}
+    >
+      <p className="font-display text-4xl font-bold leading-tight text-[var(--ink)] sm:text-5xl">
         {schedule.isFeasible ? <>Dinner&apos;s at {formatClockTime(schedule.targetEpochMinutes)}</> : <>Not enough time before dinner</>}
       </p>
       <p className="mt-2 text-sm text-[var(--ink-muted)]">{servingLine}</p>
