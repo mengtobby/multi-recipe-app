@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { nanoid } from "nanoid";
 import type { Cook, EquipmentUsage, KitchenResource, Recipe, StepKind } from "@/types/recipe";
-import { DEFAULT_COOKS, DEFAULT_KITCHEN_RESOURCES, RECIPE_COLORS } from "./defaults";
+import { DEFAULT_COOKS, DEFAULT_KITCHEN_RESOURCES, RECIPE_COLORS, defaultTargetDateTime } from "./defaults";
 import { stripCookAssignment, stripDependencyReferences } from "./mutations";
 
 export interface NewStepInput {
@@ -54,7 +54,7 @@ export const useRecipeStore = create<RecipeStoreState>()(
       recipes: [],
       cooks: DEFAULT_COOKS,
       kitchenResources: DEFAULT_KITCHEN_RESOURCES,
-      targetDateTime: "",
+      targetDateTime: defaultTargetDateTime(),
       delays: {},
 
       addRecipe: (name, servings) => {
