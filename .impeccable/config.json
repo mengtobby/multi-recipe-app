@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "createdAt": "2026-09-19T01:28:16.647Z",
+        "reason": "test fixture Recipe.color placeholder, not UI (same pattern already used in conflicts.test.ts)"
+      }
+    ]
+  }
+}
