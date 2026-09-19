@@ -15,11 +15,17 @@ interface StepFormProps {
 
 const emptyInput = (): NewStepInput => ({
   description: "",
-  durationMinutes: 5,
+  durationMinutes: 15,
   kind: "active",
   dependsOn: [],
   equipment: [],
 });
+
+/** True when a step already uses one of the fields tucked behind "More options",
+ *  so editing it opens with those options visible instead of hiding what's set. */
+function hasAdvancedOptionsSet(input: NewStepInput): boolean {
+  return Boolean(input.assignedCook || input.batchKey || input.dependsOn.length > 0);
+}
 
 export function StepForm({ recipeId, availableDependencies, editingStep, onDone }: StepFormProps) {
   const addStep = useRecipeStore((s) => s.addStep);
@@ -40,6 +46,8 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         }
       : emptyInput()
   );
+  const [showMore, setShowMore] = useState(() => hasAdvancedOptionsSet(input));
+  const [error, setError] = useState<string | null>(null);
 
   const toggleEquipment = (resourceId: string, checked: boolean) => {
     setInput((prev) => ({
@@ -65,7 +73,15 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
   };
 
   const submit = () => {
-    if (!input.description.trim() || !Number.isFinite(input.durationMinutes) || input.durationMinutes <= 0) return;
+    if (!input.description.trim()) {
+      setError("Please describe what this step is.");
+      return;
+    }
+    if (!Number.isFinite(input.durationMinutes) || input.durationMinutes <= 0) {
+      setError("Duration must be at least 1 minute.");
+      return;
+    }
+    setError(null);
     if (editingStep) {
       updateStep(recipeId, editingStep.id, input);
     } else {
@@ -75,9 +91,9 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
   };
 
   return (
-    <div className="space-y-3 rounded-sm border border-[var(--board-edge)] bg-[var(--paper)] p-3 text-sm text-[var(--ink)] shadow-[2px_4px_6px_var(--board-edge)]">
+    <div className="space-y-3 rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--paper)] p-3 text-sm text-[var(--ink)] shadow-[2px_4px_6px_var(--board-edge)]">
       <label className="block">
-        <span className="mb-1 block font-medium">Step description</span>
+        <span className="mb-1 block font-medium">What&apos;s this step?</span>
         <input
           type="text"
           value={input.description}
@@ -111,35 +127,8 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         </label>
       </div>
 
-      <label className="block">
-        <span className="mb-1 block font-medium">Assigned cook</span>
-        <select
-          value={input.assignedCook ?? ""}
-          onChange={(e) => setInput((p) => ({ ...p, assignedCook: e.target.value || undefined }))}
-          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2"
-        >
-          <option value="">Unassigned</option>
-          {cooks.map((cook) => (
-            <option key={cook.id} value={cook.id}>
-              {cook.name}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="block">
-        <span className="mb-1 block font-medium">Batch key (optional)</span>
-        <input
-          type="text"
-          value={input.batchKey ?? ""}
-          onChange={(e) => setInput((p) => ({ ...p, batchKey: e.target.value || undefined }))}
-          placeholder='e.g. "chop-garlic" — combines with same-key steps at the same time'
-          className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
-        />
-      </label>
-
       <div>
-        <span className="mb-1 block font-medium">Equipment</span>
+        <span className="mb-1 block font-medium">Equipment (optional)</span>
         <div className="space-y-1">
           {kitchenResources.map((resource) => {
             const usage = input.equipment.find((e) => e.resourceId === resource.id);
@@ -169,24 +158,69 @@ export function StepForm({ recipeId, availableDependencies, editingStep, onDone 
         </div>
       </div>
 
-      {availableDependencies.length > 0 && (
-        <div>
-          <span className="mb-1 block font-medium">Depends on</span>
-          <div className="max-h-32 space-y-1 overflow-y-auto">
-            {availableDependencies.map((dep) => (
-              <label key={dep.id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={input.dependsOn.includes(dep.id)}
-                  onChange={(e) => toggleDependency(dep.id, e.target.checked)}
-                  className="accent-[var(--frame)]"
-                />
-                {dep.label}
-              </label>
-            ))}
-          </div>
+      {!showMore && (
+        <button
+          type="button"
+          onClick={() => setShowMore(true)}
+          className="text-xs font-medium text-[var(--ink-muted)] underline decoration-dotted underline-offset-4 hover:text-[var(--ink)]"
+        >
+          + more options (cook, timing with other steps)
+        </button>
+      )}
+
+      {showMore && (
+        <div className="space-y-3 border-t border-[var(--ink-faint)]/30 pt-3">
+          {cooks.length > 1 && (
+            <label className="block">
+              <span className="mb-1 block font-medium">Who&apos;s doing this?</span>
+              <select
+                value={input.assignedCook ?? ""}
+                onChange={(e) => setInput((p) => ({ ...p, assignedCook: e.target.value || undefined }))}
+                className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2"
+              >
+                <option value="">Anyone</option>
+                {cooks.map((cook) => (
+                  <option key={cook.id} value={cook.id}>
+                    {cook.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
+          {availableDependencies.length > 0 && (
+            <div>
+              <span className="mb-1 block font-medium">Wait for another step to finish first (optional)</span>
+              <div className="max-h-32 space-y-1 overflow-y-auto">
+                {availableDependencies.map((dep) => (
+                  <label key={dep.id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={input.dependsOn.includes(dep.id)}
+                      onChange={(e) => toggleDependency(dep.id, e.target.checked)}
+                      className="accent-[var(--frame)]"
+                    />
+                    {dep.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <label className="block">
+            <span className="mb-1 block font-medium">Combine with matching steps (optional)</span>
+            <input
+              type="text"
+              value={input.batchKey ?? ""}
+              onChange={(e) => setInput((p) => ({ ...p, batchKey: e.target.value || undefined }))}
+              placeholder='e.g. "garlic" — steps sharing this word merge into one when they happen together'
+              className="w-full rounded-sm border border-[var(--ink-faint)]/40 bg-[var(--board)] px-3 py-2 placeholder:text-[var(--ink-faint)]"
+            />
+          </label>
         </div>
       )}
+
+      {error && <p className="text-xs font-medium text-[var(--red-ink)]">{error}</p>}
 
       <div className="flex gap-2 pt-1">
         <button
