@@ -37,6 +37,7 @@ export function resolveEquipmentConflicts(
   order: string[]
 ): ConflictResolution {
   const capacityByResource = new Map(capacities.map((c) => [c.resourceId, c.capacity]));
+  const nameByResource = new Map(capacities.map((c) => [c.resourceId, c.name ?? c.resourceId]));
   const usageByResource = new Map<string, { stepId: string; tempF?: number }[]>();
 
   for (const node of Object.values(nodes)) {
@@ -52,6 +53,7 @@ export function resolveEquipmentConflicts(
 
   for (const [resourceId, users] of usageByResource) {
     const capacity = capacityByResource.get(resourceId) ?? 1;
+    const name = nameByResource.get(resourceId) ?? resourceId;
     const tempByStep = new Map(users.map((u) => [u.stepId, u.tempF]));
     const stepIds = users
       .map((u) => u.stepId)
@@ -90,8 +92,8 @@ export function resolveEquipmentConflicts(
           resourceId,
           stepIds: [stepId, ...overlapping.map((iv) => iv.stepId)],
           reason: tempMismatch
-            ? `${resourceId} is needed at conflicting temperatures at the same time — bake one after the other, or pick one temperature both steps can use.`
-            : `${resourceId} is over capacity (${capacity}) — these steps overlap with no slack left to separate them. Raise ${resourceId} capacity in Kitchen setup, or move one step earlier.`,
+            ? `${name} is needed at conflicting temperatures at the same time — bake one after the other, or pick one temperature both steps can use.`
+            : `${name} is over capacity (${capacity}) — these steps overlap with no slack left to separate them. Raise ${name} capacity in Kitchen setup, or move one step earlier.`,
           resolved: false,
         });
         accepted.push({ stepId, start: timing.scheduledStart, finish: timing.scheduledFinish, tempF });

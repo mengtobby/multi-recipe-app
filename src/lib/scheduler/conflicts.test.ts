@@ -69,6 +69,30 @@ describe("resolveEquipmentConflicts", () => {
     expect(resolved.conflicts[0].stepIds.sort()).toEqual(["a1", "b1"]);
   });
 
+  it("names the resource by what the person actually called it, not its internal id", () => {
+    const recipes = [
+      recipe("a", [
+        { id: "a1", recipeId: "a", description: "bake a", durationMinutes: 50, kind: "passive", dependsOn: [], equipment: [{ resourceId: "prep-space" }] },
+      ]),
+      recipe("b", [
+        { id: "b1", recipeId: "b", description: "bake b", durationMinutes: 50, kind: "passive", dependsOn: [], equipment: [{ resourceId: "prep-space" }] },
+      ]),
+    ];
+    const graph = buildGraph(recipes, 0);
+    const order = topologicalSort(graph);
+    const { timings } = computeTimings(graph, order, 50);
+
+    const resolved = resolveEquipmentConflicts(
+      graph,
+      timings,
+      [{ resourceId: "prep-space", capacity: 1, name: "Prep / cutting board" }],
+      order
+    );
+
+    expect(resolved.conflicts[0].reason).toContain("Prep / cutting board");
+    expect(resolved.conflicts[0].reason).not.toContain("prep-space");
+  });
+
   it("allows concurrent use up to the resource's capacity", () => {
     const recipes = [
       recipe("veg", [

@@ -56,4 +56,6 @@ export interface ScheduleResult {
 export interface KitchenResourceCapacity {
   resourceId: string;
   capacity: number;
+  /** The name a person actually gave this resource (e.g. "Prep / cutting board"), for conflict messages. */
+  name?: string;
 }

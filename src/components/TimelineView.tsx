@@ -20,9 +20,12 @@ interface TimelineViewProps {
 export function TimelineView({ schedule, timeline }: TimelineViewProps) {
   const recipes = useRecipeStore((s) => s.recipes);
   const cooks = useRecipeStore((s) => s.cooks);
+  const kitchenResources = useRecipeStore((s) => s.kitchenResources);
   const addDelay = useRecipeStore((s) => s.addDelay);
   const [selectedCookId, setSelectedCookId] = useState<string | null>(null);
   const now = useNowEpochMinutes();
+
+  const resourceNameById = useMemo(() => toMapById(kitchenResources), [kitchenResources]);
 
   const stepLookup = useMemo(() => {
     const map = new Map<string, { assignedCook?: string }>();
@@ -99,7 +102,12 @@ export function TimelineView({ schedule, timeline }: TimelineViewProps) {
                     isServe ? "text-[var(--board)]/70" : "text-[var(--ink-faint)]"
                   }`}
                 >
-                  {entry.equipment.map((e) => (e.tempF ? `${e.resourceId} @ ${e.tempF}°F` : e.resourceId)).join(", ")}
+                  {entry.equipment
+                    .map((e) => {
+                      const name = resourceNameById.get(e.resourceId)?.name ?? e.resourceId;
+                      return e.tempF ? `${name} @ ${e.tempF}°F` : name;
+                    })
+                    .join(", ")}
                 </span>
                 <div className="flex items-center gap-3">
                   <StepTimer start={entry.start} finish={entry.finish} now={now} />

@@ -54,7 +54,7 @@ function useBaseSchedule(): DerivedSchedule {
 
     try {
       const built = buildSchedule(recipes, targetEpochMinutes, {
-        kitchenCapacities: kitchenResources.map((r) => ({ resourceId: r.id, capacity: r.capacity })),
+        kitchenCapacities: kitchenResources.map((r) => ({ resourceId: r.id, capacity: r.capacity, name: r.name })),
       });
       const schedule = applyDelays(built, delays);
       return { schedule, timeline: timelineFor(schedule), error: null };
