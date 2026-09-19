@@ -6,7 +6,8 @@ import { RecipeBuilder } from "@/components/RecipeBuilder";
 import { TimelineView } from "@/components/TimelineView";
 import { useSchedule } from "@/lib/store/useSchedule";
 import { useRecipeStore } from "@/lib/store/recipeStore";
-import { formatClockTime } from "@/lib/format";
+import { useNowEpochMinutes } from "@/lib/store/useNow";
+import { formatClockTime, formatDuration } from "@/lib/format";
 import type { ScheduleResult } from "@/lib/scheduler";
 
 type MobileTab = "timeline" | "setup";
@@ -88,9 +89,11 @@ interface HeroCardProps {
 }
 
 function HeroCard({ schedule, error, dishCount, cookCount }: HeroCardProps) {
+  const now = useNowEpochMinutes();
   if (error || !schedule) return null;
 
   const conflictCount = schedule.conflicts.length;
+  const shortfallMinutes = schedule.minimumDurationMinutes - (schedule.targetEpochMinutes - now);
   const dishWord = dishCount === 1 ? "dish" : "dishes";
   const servingLine =
     cookCount > 1 ? `${dishCount} ${dishWord} · ${cookCount} cooks` : `${dishCount} ${dishWord}, one timeline`;
@@ -108,7 +111,7 @@ function HeroCard({ schedule, error, dishCount, cookCount }: HeroCardProps) {
       {!schedule.isFeasible && (
         <p className="mt-4 flex items-center gap-2 rounded-sm border-2 border-[var(--red)] bg-[var(--red-surface)] px-3 py-2 text-sm font-semibold text-[var(--red-ink)]">
           <WarningIcon />
-          Start earlier or simplify the menu to make the target.
+          You need about {formatDuration(Math.max(1, shortfallMinutes))} more — push dinner back or cut a step.
         </p>
       )}
       {schedule.isFeasible && conflictCount > 0 && (

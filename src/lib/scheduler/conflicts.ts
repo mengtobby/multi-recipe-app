@@ -90,8 +90,8 @@ export function resolveEquipmentConflicts(
           resourceId,
           stepIds: [stepId, ...overlapping.map((iv) => iv.stepId)],
           reason: tempMismatch
-            ? `${resourceId} is needed at conflicting temperatures at the same time — bake sequentially or pick a compromise temperature.`
-            : `${resourceId} is over capacity (${capacity}) — these steps overlap with no slack left to separate them.`,
+            ? `${resourceId} is needed at conflicting temperatures at the same time — bake one after the other, or pick one temperature both steps can use.`
+            : `${resourceId} is over capacity (${capacity}) — these steps overlap with no slack left to separate them. Raise ${resourceId} capacity in Kitchen setup, or move one step earlier.`,
           resolved: false,
         });
         accepted.push({ stepId, start: timing.scheduledStart, finish: timing.scheduledFinish, tempF });
