@@ -44,7 +44,8 @@ export function RecipeBuilder() {
         <button
           type="button"
           onClick={createRecipe}
-          className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)]"
+          disabled={!newRecipeName.trim()}
+          className="rounded-sm bg-[var(--frame)] px-3 py-2 text-sm font-medium text-[var(--frame-label)] hover:bg-[var(--frame-dark)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--frame)]"
         >
           Add
         </button>
