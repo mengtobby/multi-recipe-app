@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRecipeStore } from "@/lib/store/recipeStore";
 import { formatDuration } from "@/lib/format";
 import { toMapById } from "@/lib/collections";
+import { getAvailableDependencies } from "@/lib/store/dependencies";
 import { StepForm } from "./StepForm";
 
 export function RecipeBuilder() {
@@ -23,16 +24,7 @@ export function RecipeBuilder() {
     setNewRecipeName("");
   };
 
-  const recipeById = useMemo(() => toMapById(recipes), [recipes]);
   const cookById = useMemo(() => toMapById(cooks), [cooks]);
-  const allDependencies = useMemo(
-    () =>
-      recipes.flatMap((r) => r.steps).map((s) => ({
-        id: s.id,
-        label: `${recipeById.get(s.recipeId)?.name}: ${s.description}`,
-      })),
-    [recipes, recipeById]
-  );
 
   return (
     <section className="rounded-sm border border-[var(--paper-edge)] bg-[var(--paper)] p-5 shadow-[2px_5px_10px_var(--board-edge)]">
@@ -91,7 +83,7 @@ export function RecipeBuilder() {
                         <StepForm
                           recipeId={recipe.id}
                           editingStep={step}
-                          availableDependencies={allDependencies.filter((d) => d.id !== step.id)}
+                          availableDependencies={getAvailableDependencies(recipes, step.id)}
                           onDone={() => setEditingStep(null)}
                         />
                       </div>
@@ -129,7 +121,7 @@ export function RecipeBuilder() {
               {addingStepFor === recipe.id ? (
                 <StepForm
                   recipeId={recipe.id}
-                  availableDependencies={allDependencies}
+                  availableDependencies={getAvailableDependencies(recipes, undefined)}
                   onDone={() => setAddingStepFor(null)}
                 />
               ) : (
