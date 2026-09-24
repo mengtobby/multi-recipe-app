@@ -1,3 +1,3 @@
 # multi-recipe-app
 
-to manage multiple recipes while cooking! have fun!
+to manage multiple recipes while cooking! 
